@@ -205,6 +205,11 @@
 
 
                         EXIF.getData(fileInfo, () => {
+                            if(navigator.userAgent.indexOf('Mobile') != -1){
+                                canvasContext.drawImage(this, 0, 0, 200, 200);
+                                return
+                            }
+
 
                             const orientation = EXIF.getTag(fileInfo, "Orientation");
                             console.log(orientation);
@@ -214,9 +219,7 @@
                             switch (orientation) {
 
                                 // @details 이미지 회전값이 0인경우 ( 정방향 )
-                                case 6:
-                                    document.getElementById("realImage").style.transform = "rotate( 0deg )";
-                                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 0deg )";
+                                case undefined:
 
                                     canvasContext.drawImage(this, 0, 0, 200, 200);
                                     break;
@@ -242,7 +245,7 @@
                                     break;
 
                                 // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
-                                case 7:
+                                case 6:
                                     document.getElementById("realImage").style.transform = "rotate( 90deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 90deg )";
                                     document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(90deg)";
