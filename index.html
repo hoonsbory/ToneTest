@@ -13,7 +13,7 @@
 
     <canvas id="myCanvas">
     </canvas>
-    <canvas id="copyCanvas" style="display: none;">
+    <canvas id="copyCanvas">
     </canvas>
     <div id="webcam-container"></div>
     <div id="label-container"></div>
@@ -98,8 +98,26 @@
 
                 );
 
+                if (jcropApi) {
+                    jcropApi.destroy();
+                    jcropApi = null;
+                    console.log(document.getElementById("myCanvas"));
+                }
+                let canvas2 = document.getElementById("copyCanvas");
 
+                let canvasContext2 = canvas2.getContext("2d");
+                $(".file-upload-image").attr("src", getBase64Image());
+                var image = new Image();
+                image.src = document.getElementById("realImage").src;
+                image.onload = function () {
 
+                    canvasContext2.drawImage(image, 0, 0, 200, 200);
+                }
+                $("#realImage").Jcrop({
+                    onSelect: showCoords,
+                }, function () {
+                    jcropApi = this;
+                });
 
 
 
@@ -181,7 +199,6 @@
 
                         let canvasContext = canvas.getContext("2d");
 
-
                         // @breif 캔버스의 이미지
 
 
@@ -205,9 +222,9 @@
 
 
                         EXIF.getData(fileInfo, () => {
-                            if(navigator.userAgent.indexOf('Mobile') != -1){
+                            if (navigator.userAgent.indexOf('Mobile') != -1) {
                                 canvasContext.drawImage(this, 0, 0, 200, 200);
-                                console.log("모바일기기입니다.")
+                                // console.log("모바일기기입니다.")
                                 return
                             }
 
@@ -223,9 +240,11 @@
                                 case undefined:
 
                                     canvasContext.drawImage(this, 0, 0, 200, 200);
-                                    console.log("모바일기기입니다.")
                                     break;
+                                case 1:
 
+                                    canvasContext.drawImage(this, 0, 0, 200, 200);
+                                    break;
                                 // @details 이미지 회전값이 180 기운 경우
                                 case 3:
                                     document.getElementById("realImage").style.transform = "rotate( 180deg )";
@@ -259,9 +278,9 @@
                                     canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
                                     canvasContext.rotate(Math.PI * 0.5);
 
-                                    canvasContext.drawImage(this, -(tempImage.height/2), (tempImage.width/2)-200, 200, 200);
+                                    canvasContext.drawImage(this, -(tempImage.height / 2), (tempImage.width / 2) - 200, 200, 200);
                                     canvasContext.restore();
-                                
+
 
                                     // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
 
@@ -355,15 +374,15 @@
             console.log(c.h);
         };
 
-        // function getBase64Image() {
+        function getBase64Image() {
 
-        //     var canvas = document.getElementById("myCanvas");
+            var canvas = document.getElementById("myCanvas");
 
-        //     var dataURL = canvas.toDataURL("image/jpg");
+            var dataURL = canvas.toDataURL("image/png");
 
-        //     return dataURL; // dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+            return dataURL; // dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 
-        // }
+        }
 
         // run the webcam image through the image model
         async function predict() {
