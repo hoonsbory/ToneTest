@@ -104,7 +104,7 @@
 
               
 
-            }, false);
+            });
 
             //이미지 경로 설정
         })
@@ -118,7 +118,6 @@
                     jcropApi = null;
                 }
                 var reader = new FileReader();
-
                 reader.onload = function (e) {
                     $('.image-upload-wrap').hide();
                     $('.file-upload-image').removeAttr("style");
