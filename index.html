@@ -22,6 +22,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <!-- <script type="text/javascript" src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script> -->
     <script src="Jcrop.min.js"></script>
+    <script type="text/javascript" src="load-image.all.min.js"></script>
 
 
     <div class="file-upload">
@@ -70,20 +71,20 @@
 
                 var imgWidth = document.getElementById("ToneImage").width;
                 var imgHeight = document.getElementById("ToneImage").height;
-                var xRate = imgWidth/200;
-                var yRate = imgHeight/200;
+                var xRate = imgWidth / 200;
+                var yRate = imgHeight / 200;
 
                 canvasContext.drawImage(
 
                     imgClo
 
-                    , x*xRate        // 자르기를 시작할 x좌표
+                    , x * xRate        // 자르기를 시작할 x좌표
 
-                    , y*yRate       // 자르기를 시작할 y좌표
+                    , y * yRate       // 자르기를 시작할 y좌표
 
-                    , w*xRate   // 잘라낸 이미지의 넓이
+                    , w * xRate   // 잘라낸 이미지의 넓이
 
-                    , h*yRate    // 잘라낸 이미지의 높이
+                    , h * yRate    // 잘라낸 이미지의 높이
 
                     , 0                                         // 캔버스에 이미지를 배치할 x좌표
 
@@ -102,7 +103,7 @@
 
                 // @details JCROP을 종료한다.
 
-              
+
 
             });
 
@@ -117,24 +118,36 @@
 
                     jcropApi = null;
                 }
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('.image-upload-wrap').hide();
-                    $('.file-upload-image').removeAttr("style");
-                    $('.file-upload-image').attr('src', e.target.result);
-                    $('.file-upload-image').css("display", "none");
-                    $('#realImage').attr('src', document.getElementById("ToneImage").getAttribute("src"));
-                    $('.file-upload-content').show();
+                var files = input.files;
+                var fileType = files[0].type;
+                loadImage(files[0], function (img, data) {
+                    img.toBlob(function (blob) {
+                        var rotateFile = new File([blob], files[0].name, {
+                            type: fileType
+                        });
+                        sel_file = rotateFile; var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('.image-upload-wrap').hide();
+                            $('.file-upload-image').removeAttr("style");
+                            $('.file-upload-image').attr('src', e.target.result);
+                            $('.file-upload-image').css("display", "none");
+                            $('#realImage').attr('src', document.getElementById("ToneImage").getAttribute("src"));
+                            $('.file-upload-content').show();
+            
+                            $('.image-title').html(input.files[0].name);
+                            $("#realImage").Jcrop({
+                                onSelect: showCoords
+                            }, function () {
+                                jcropApi = this;
+                            });
+                        }
+                        reader.readAsDataURL(rotateFile);
+                    }, fileType)
+                }, {
+                    orientation: true
+                });//end loadImage
 
-                    $('.image-title').html(input.files[0].name);
-                    $("#realImage").Jcrop({
-                        onSelect: showCoords
-                    }, function () {
-                        jcropApi = this;
-                    });
-                };
-
-                reader.readAsDataURL(input.files[0]);
+              
 
             } else {
                 removeUpload();
