@@ -7,11 +7,13 @@
 
 <body>
     <div>Teachable Machine Image Model</div>
-    <button type="button" onclick="init()">Start</button>
-    <button type="button" onclick="predict()">Start</button>
+    <!-- <button type="button" onclick="init()">Start</button> -->
+    <button type="button" onclick="predict()">피부톤 측정</button>
     <button id="cropImage">자르기</button>
 
     <canvas id="myCanvas">
+    </canvas>
+    <canvas id="copyCanvas" style="display: none;">
     </canvas>
     <div id="webcam-container"></div>
     <div id="label-container"></div>
@@ -23,7 +25,7 @@
     <!-- <script type="text/javascript" src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script> -->
     <script src="Jcrop.min.js"></script>
     <script type="text/javascript" src="load-image.all.min.js"></script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 
     <div class="file-upload">
         <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add
@@ -36,8 +38,8 @@
             </div>
         </div>
         <div class="file-upload-content">
-            <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;"
-                alt="your image" />
+            <!-- <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;" -->
+            <!-- alt="your image" /> -->
             <img class="file-upload-image" id="realImage" src="#" width="200px" height="200px" alt="your image" />
             <div class="image-title-wrap">
                 <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
@@ -54,7 +56,7 @@
 
         $("#cropImage").click(function () {
             var imgClo = new Image();
-            imgClo.src = document.getElementById("realImage").getAttribute("src");
+            imgClo.src = document.getElementById("realImage").src;
             imgClo.addEventListener('load', function () {
                 //로드된 이미지를 캔버스에 출력
                 let canvas = document.querySelector("canvas");
@@ -69,22 +71,22 @@
 
                 canvas.height = h;
 
-                var imgWidth = document.getElementById("ToneImage").width;
-                var imgHeight = document.getElementById("ToneImage").height;
-                var xRate = imgWidth / 200;
-                var yRate = imgHeight / 200;
+                // var imgWidth = document.getElementById("ToneImage").width;
+                // var imgHeight = document.getElementById("ToneImage").height;
+                // var xRate = imgWidth / 200;
+                // var yRate = imgHeight / 200;
 
                 canvasContext.drawImage(
 
-                    imgClo
+                    document.getElementById("copyCanvas")
 
-                    , x * xRate        // 자르기를 시작할 x좌표
+                    , x         // 자르기를 시작할 x좌표
 
-                    , y * yRate       // 자르기를 시작할 y좌표
+                    , y        // 자르기를 시작할 y좌표
 
-                    , w * xRate   // 잘라낸 이미지의 넓이
+                    , w    // 잘라낸 이미지의 넓이
 
-                    , h * yRate    // 잘라낸 이미지의 높이
+                    , h     // 잘라낸 이미지의 높이
 
                     , 0                                         // 캔버스에 이미지를 배치할 x좌표
 
@@ -110,6 +112,52 @@
             //이미지 경로 설정
         })
 
+
+        // function readURL(input) {
+        //     if (input.files && input.files[0]) {
+
+        //         if (jcropApi) {
+        //             jcropApi.destroy();
+
+        //             jcropApi = null;
+        //         }
+        //         var files = input.files;
+        //         var fileType = files[0].type;
+        //         loadImage(files[0], function (img, data) {
+        //             img.toBlob(function (blob) {
+        //                 var rotateFile = new File([blob], files[0].name, {
+        //                     type: fileType
+        //                 });
+        //                 sel_file = rotateFile;
+        //                 var reader = new FileReader();
+        //                 reader.onload = function (e) {
+        //                     $('.image-upload-wrap').hide();
+        //                     $('.file-upload-image').removeAttr("style");
+        //                     $('.file-upload-image').attr('src', e.target.result);
+        //                     $('.file-upload-image').css("display", "none");
+        //                     $('#realImage').attr('src', document.getElementById("ToneImage").getAttribute("src"));
+        //                     $('.file-upload-content').show();
+
+        //                     $('.image-title').html(input.files[0].name);
+        //                     $("#realImage").Jcrop({
+        //                         onSelect: showCoords
+        //                     }, function () {
+        //                         jcropApi = this;
+        //                     });
+        //                 }
+        //                 reader.readAsDataURL(rotateFile);
+        //             }, fileType)
+        //         }, {
+        //             orientation: true
+        //         });//end loadImage
+
+
+
+        //     } else {
+        //         removeUpload();
+        //     }
+        // }  블롭을 통해 자동으로 로테이트하는 함수, 그러나 지원하지 않는 브라우저가 많아서 포기.
+
         function readURL(input) {
             if (input.files && input.files[0]) {
 
@@ -118,36 +166,134 @@
 
                     jcropApi = null;
                 }
-                var files = input.files;
-                var fileType = files[0].type;
-                loadImage(files[0], function (img, data) {
-                    img.toBlob(function (blob) {
-                        var rotateFile = new File([blob], files[0].name, {
-                            type: fileType
-                        });
-                        sel_file = rotateFile; var reader = new FileReader();
-                        reader.onload = function (e) {
-                            $('.image-upload-wrap').hide();
-                            $('.file-upload-image').removeAttr("style");
-                            $('.file-upload-image').attr('src', e.target.result);
-                            $('.file-upload-image').css("display", "none");
-                            $('#realImage').attr('src', document.getElementById("ToneImage").getAttribute("src"));
-                            $('.file-upload-content').show();
-            
-                            $('.image-title').html(input.files[0].name);
-                            $("#realImage").Jcrop({
-                                onSelect: showCoords
-                            }, function () {
-                                jcropApi = this;
-                            });
-                        }
-                        reader.readAsDataURL(rotateFile);
-                    }, fileType)
-                }, {
-                    orientation: true
-                });//end loadImage
+                const fileInfo = input.files[0];
+                var reader = new FileReader();
+                let tempImage = new Image();
+                reader.onload = function (e) {
+                    tempImage.src = e.target.result;
+                    tempImage.onload = function () {
 
-              
+
+
+                        // @breif 캔버스 위에 이미지 그리기
+
+                        let canvas = document.getElementById("copyCanvas");
+
+                        let canvasContext = canvas.getContext("2d");
+
+
+                        // @breif 캔버스의 이미지
+
+
+
+
+
+                        $('.image-upload-wrap').hide();
+                        $('.file-upload-image').removeAttr("style");
+                        $('.file-upload-image').attr('src', e.target.result);
+                        $("#realImage").Jcrop({
+                            onSelect: showCoords,
+                        }, function () {
+                            jcropApi = this;
+                        });
+
+                        // $('.file-upload-image').css("display", "none");
+                        // $('#realImage').attr('src', e.target.result);
+                        $('.file-upload-content').show();
+                        $('.image-title').html(input.files[0].name);
+
+
+
+                        EXIF.getData(fileInfo, () => {
+
+                            const orientation = EXIF.getTag(fileInfo, "Orientation");
+                            console.log(orientation);
+                            canvas.width = 200;
+
+                            canvas.height = 200;
+                            switch (orientation) {
+
+                                // @details 이미지 회전값이 0인경우 ( 정방향 )
+                                case undefined:
+                                    document.getElementById("realImage").style.transform = "rotate( 0deg )";
+                                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 0deg )";
+
+                                    canvasContext.drawImage(this, 0, 0, 200, 200);
+                                    break;
+
+                                // @details 이미지 회전값이 180 기운 경우
+                                case 3:
+                                    document.getElementById("realImage").style.transform = "rotate( 180deg )";
+                                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 180deg )";
+
+
+
+
+                                    // canvasContext.rotate((180) * Math.PI / 180);
+
+                                    canvasContext.rotate(Math.PI);
+
+
+
+                                    // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
+
+                                    canvasContext.drawImage(this, (tempImage.width * -1), (tempImage.height * -1));
+
+                                    break;
+
+                                // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
+                                case 6:
+                                    document.getElementById("realImage").style.transform = "rotate( 90deg )";
+                                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 90deg )";
+                                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(90deg)";
+                                    // @details 270° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+
+
+                                    // tempImage.src = document.getElementById("ToneImage").getAttribute("src");
+                                    canvasContext.save();
+                                    canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                                    canvasContext.rotate(Math.PI * 0.5);
+
+                                    canvasContext.drawImage(this, -(tempImage.height/2), (tempImage.width/2)-200, 200, 200);
+                                    canvasContext.restore();
+                                
+
+                                    // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
+
+
+                                    break;
+
+                                // @details 이미지 회전값이 90 기운 경우
+                                case 8:
+                                    document.getElementById("realImage").style.transform = "rotate( 270deg )";
+                                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 270deg )";
+                                    // @details 90° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+
+
+
+
+                                    // canvasContext.rotate((90) * Math.PI / 180);
+
+                                    canvasContext.rotate(Math.PI / 2);
+
+
+
+                                    // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
+
+                                    canvasContext.drawImage(this, 0, (tempImage.height * -1));
+                                    break;
+                            }
+                        });
+                        // let dataURI = canvas.toDataURL("image/jpeg");
+
+                        // document.querySelector("#ToneImage").src = dataURI;
+                    };
+
+
+                }
+                reader.readAsDataURL(fileInfo);
+
+
 
             } else {
                 removeUpload();
@@ -192,7 +338,7 @@
                 labelContainer.appendChild(document.createElement("div"));
             }
         }
-
+        init();
         var showCoords = function (c) {
             console.log(c.x);
             x = c.x;
@@ -204,15 +350,15 @@
             console.log(c.h);
         };
 
-        function getBase64Image() {
+        // function getBase64Image() {
 
-            var canvas = document.getElementById("myCanvas");
+        //     var canvas = document.getElementById("myCanvas");
 
-            var dataURL = canvas.toDataURL("image/jpg");
+        //     var dataURL = canvas.toDataURL("image/jpg");
 
-            return dataURL; // dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        //     return dataURL; // dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 
-        }
+        // }
 
         // run the webcam image through the image model
         async function predict() {
