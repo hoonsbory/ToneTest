@@ -214,7 +214,7 @@
                             switch (orientation) {
 
                                 // @details 이미지 회전값이 0인경우 ( 정방향 )
-                                case undefined:
+                                case 6:
                                     document.getElementById("realImage").style.transform = "rotate( 0deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 0deg )";
 
@@ -242,7 +242,7 @@
                                     break;
 
                                 // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
-                                case 6:
+                                case 7:
                                     document.getElementById("realImage").style.transform = "rotate( 90deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 90deg )";
                                     document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(90deg)";
