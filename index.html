@@ -257,9 +257,9 @@
 
                             const orientation = EXIF.getTag(fileInfo, "Orientation");
                             console.log(orientation);
-                            canvas.width = document.getElementById("originalImg").width;
+                            canvas.width = tempImage.width;
 
-                            canvas.height =  document.getElementById("originalImg").height;
+                            canvas.height =  tempImage.height;
                             switch (orientation) {
 
                                 // @details 이미지 회전값이 0인경우 ( 정방향 )
