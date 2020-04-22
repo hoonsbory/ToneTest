@@ -9,11 +9,12 @@
     <div>Teachable Machine Image Model</div>
     <!-- <button type="button" onclick="init()">Start</button> -->
     <button type="button" onclick="predict()">피부톤 측정</button>
+    <button type="button" onclick="refresh()">사진 복구</button>
     <button id="cropImage">자르기</button>
 
-    <canvas id="myCanvas">
+    <canvas id="myCanvas" style="display: none;">
     </canvas>
-    <canvas id="copyCanvas">
+    <canvas id="copyCanvas" style="display: none;">
     </canvas>
     <div id="webcam-container"></div>
     <div id="label-container"></div>
@@ -41,6 +42,7 @@
             <!-- <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;" -->
             <!-- alt="your image" /> -->
             <img class="file-upload-image" id="realImage" src="#" width="200px" height="200px" alt="your image" />
+            <img id="originalImg"  style="display: none;" />
             <div class="image-title-wrap">
                 <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
                         class="image-title">Uploaded Image</span></button>
@@ -59,7 +61,8 @@
             imgClo.src = document.getElementById("realImage").src;
             imgClo.addEventListener('load', function () {
                 //로드된 이미지를 캔버스에 출력
-                let canvas = document.querySelector("canvas");
+                //복사용 캔버스에 복사함. 하나의 캔버스에서 자기 자신을 불러와 크롭해서 리드로우가 불가능하기 때문.
+                let canvas = document.getElementById("myCanvas");
 
                 let canvasContext = canvas.getContext("2d");
 
@@ -67,52 +70,73 @@
 
                 // @breif 캔버스 크기를 이미지 크기와 동일하게 지정
 
-                canvas.width = w;
+                var imgWidth = document.getElementById("copyCanvas").width;
+                var imgHeight = document.getElementById("copyCanvas").height;
+                var xRate = imgWidth / 200;
+                var yRate = imgHeight / 200;
+                canvas.width = w * xRate;
 
-                canvas.height = h;
-
-                // var imgWidth = document.getElementById("ToneImage").width;
-                // var imgHeight = document.getElementById("ToneImage").height;
-                // var xRate = imgWidth / 200;
-                // var yRate = imgHeight / 200;
+                canvas.height = h * yRate;
 
                 canvasContext.drawImage(
 
                     document.getElementById("copyCanvas")
 
-                    , x         // 자르기를 시작할 x좌표
+                    , x * xRate        // 자르기를 시작할 x좌표
 
-                    , y        // 자르기를 시작할 y좌표
+                    , y * yRate       // 자르기를 시작할 y좌표
 
-                    , w    // 잘라낸 이미지의 넓이
+                    , w * xRate   // 잘라낸 이미지의 넓이
 
-                    , h     // 잘라낸 이미지의 높이
+                    , h * yRate    // 잘라낸 이미지의 높이
 
                     , 0                                         // 캔버스에 이미지를 배치할 x좌표
 
                     , 0                                         // 캔버스에 이미지를 배치할 y좌표
 
-                    , w    // 사용할 이미지의 넓이(이미지 스트레칭 또는 축소)
+                    , w * xRate  // 사용할 이미지의 넓이(이미지 스트레칭 또는 축소)
 
-                    , h    // 사용할 이미지의 높이(이미지 스트레칭 또는 축소)
+                    , h * yRate  // 사용할 이미지의 높이(이미지 스트레칭 또는 축소)
 
                 );
+
+
+                // 로드된 이미지를 캔버스에 출력
+                let canvas2 = document.getElementById("copyCanvas");
+
+                let canvasContext2 = canvas2.getContext("2d");
+
+
+
+                // @breif 캔버스 크기를 이미지 크기와 동일하게 지정
+
+                canvas2.width = document.getElementById("myCanvas").width;
+
+                canvas2.height = document.getElementById("myCanvas").height;
+
+                canvasContext2.drawImage(
+
+                    document.getElementById("myCanvas"), 0, 0
+
+
+                );
+
+
 
                 if (jcropApi) {
                     jcropApi.destroy();
                     jcropApi = null;
-                    console.log(document.getElementById("myCanvas"));
                 }
-                let canvas2 = document.getElementById("copyCanvas");
+                // let canvas2 = document.getElementById("copyCanvas");
 
-                let canvasContext2 = canvas2.getContext("2d");
+                // let canvasContext2 = canvas2.getContext("2d");
+                // var image = new Image();
+                // image.src = document.getElementById("realImage").src;
+                // image.onload = function () {
+
+                //     canvasContext2.drawImage(image, 0, 0, 200, 200);
+                // }
                 $(".file-upload-image").attr("src", getBase64Image());
-                var image = new Image();
-                image.src = document.getElementById("realImage").src;
-                image.onload = function () {
-
-                    canvasContext2.drawImage(image, 0, 0, 200, 200);
-                }
                 document.getElementById("realImage").style.transform = "none";
                 $("#realImage").Jcrop({
                     onSelect: showCoords,
@@ -209,6 +233,7 @@
                         $('.image-upload-wrap').hide();
                         $('.file-upload-image').removeAttr("style");
                         $('.file-upload-image').attr('src', e.target.result);
+                        $('#originalImg').attr('src', e.target.result);
                         $("#realImage").Jcrop({
                             onSelect: showCoords,
                         }, function () {
@@ -232,59 +257,76 @@
 
                             const orientation = EXIF.getTag(fileInfo, "Orientation");
                             console.log(orientation);
-                            canvas.width = 200;
+                            canvas.width = this.width;
 
-                            canvas.height = 200;
+                            canvas.height = this.height;
                             switch (orientation) {
 
                                 // @details 이미지 회전값이 0인경우 ( 정방향 )
                                 case undefined:
 
-                                    canvasContext.drawImage(this, 0, 0, 200, 200);
+                                    canvasContext.drawImage(this, 0, 0, this.width, this.height);
                                     break;
                                 case 1:
 
-                                    canvasContext.drawImage(this, 0, 0, 200, 200);
+                                    canvasContext.drawImage(this, 0, 0, this.width, this.height);
+                                    break;
+                                case 0:
+
+                                    canvasContext.drawImage(this, 0, 0, this.width, this.height);
                                     break;
                                 // @details 이미지 회전값이 180 기운 경우
                                 case 3:
                                     document.getElementById("realImage").style.transform = "rotate( 180deg )";
+                                    document.getElementById("originalImg").style.transform = "rotate( 180deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 180deg )";
+                                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(180deg)";
 
 
 
 
                                     // canvasContext.rotate((180) * Math.PI / 180);
 
-                                    canvasContext.save();
-                                    canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
                                     canvasContext.rotate(Math.PI);
+                                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
 
 
 
 
                                     // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
 
-                                    canvasContext.drawImage(this, 0,0,200,200);
-                                    canvasContext.restore();
+                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
 
                                     break;
 
                                 // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
                                 case 6:
+                                    if (canvas.width < canvas.height) {
+                                        canvas.width = canvas.height;
+                                    } else {
+                                        canvas.height = canvas.width;
+                                    }
                                     document.getElementById("realImage").style.transform = "rotate( 90deg )";
+                                    document.getElementById("originalImg").style.transform = "rotate( 90deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 90deg )";
                                     document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(90deg)";
                                     // @details 270° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
 
 
                                     // tempImage.src = document.getElementById("ToneImage").getAttribute("src");
-                                    canvasContext.save();
-                                    canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
-                                    canvasContext.rotate(Math.PI * 0.5);
+                                    // canvasContext.save();
+                                    // canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                                    // canvasContext.rotate(Math.PI * 0.5);
 
-                                    canvasContext.drawImage(this, -(tempImage.height / 2), (tempImage.width / 2) - 200, 200, 200);
-                                    canvasContext.restore();
+                                    // canvasContext.drawImage(this, -1490,-0);
+
+                                    // canvasContext.restore();
+
+                                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                                    canvasContext.rotate(Math.PI * 0.5);
+                                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
 
 
                                     // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
@@ -294,8 +336,16 @@
 
                                 // @details 이미지 회전값이 90 기운 경우
                                 case 8:
+                                    //회전하기전에 정사각형을 만들어주자.
+                                    if (canvas.width < canvas.height) {
+                                        canvas.width = canvas.height;
+                                    } else {
+                                        canvas.height = canvas.width;
+                                    }
                                     document.getElementById("realImage").style.transform = "rotate( 270deg )";
+                                    document.getElementById("originalImg").style.transform = "rotate( 270deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 270deg )";
+                                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(270deg)";
                                     // @details 90° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
 
 
@@ -303,16 +353,15 @@
 
                                     // canvasContext.rotate((90) * Math.PI / 180);
 
-                                    canvasContext.save();
-                                    canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                                    //캔버스의 중심점 설정.
+                                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
                                     canvasContext.rotate(Math.PI * 1.5);
-
+                                    //회전시킨 후 다시 중심점 0,0으로 설정.
+                                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
 
 
                                     // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
-
-                                    canvasContext.drawImage(this, -(tempImage.height / 2), (tempImage.width / 2) - 200, 200, 200);
-                                    canvasContext.restore();
+                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
                                     break;
                             }
                         });
@@ -372,19 +421,15 @@
         }
         init();
         var showCoords = function (c) {
-            console.log(c.x);
             x = c.x;
             y = c.y;
             w = c.w;
             h = c.h;
-            console.log(c.y);
-            console.log(c.w);
-            console.log(c.h);
         };
 
         function getBase64Image() {
 
-            var canvas = document.getElementById("myCanvas");
+            var canvas = document.getElementById("copyCanvas");
 
             var dataURL = canvas.toDataURL("image/png");
 
@@ -392,15 +437,114 @@
 
         }
 
+        function refresh() {
+            var rotate = document.getElementById("originalImg").style.transform;
+            var image = document.getElementById("originalImg");
+            document.getElementsByClassName("file-upload-image")[1].src = image.src;
+            document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.src = image.src;
+            document.getElementsByClassName("file-upload-image")[1].style.transform = rotate;
+            document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = rotate;
+
+            var canvas =  document.getElementById("copyCanvas");
+            var canvasContext = canvas.getContext("2d");
+
+            canvas.width = document.getElementById("originalImg").width;
+            canvas.height = document.getElementById("originalImg").height;
+            console.log(rotate);
+            switch (rotate) {
+
+                // @details 이미지 회전값이 0인경우 ( 정방향 )
+                case "":
+
+                    canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    break;
+               
+                // @details 이미지 회전값이 180 기운 경우
+                case "rotate(180deg)":
+
+                    // canvasContext.rotate((180) * Math.PI / 180);
+
+                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                    canvasContext.rotate(Math.PI);
+                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+
+
+
+
+                    // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
+
+                    canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+                    break;
+
+                // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
+                case "rotate(90deg)":
+                    console.log("tlqkf");
+                    if (canvas.width < canvas.height) {
+                        canvas.width = canvas.height;
+                    } else {
+                        canvas.height = canvas.width;
+                    }
+                    // @details 270° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+
+
+                    // tempImage.src = document.getElementById("ToneImage").getAttribute("src");
+                    // canvasContext.save();
+                    // canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                    // canvasContext.rotate(Math.PI * 0.5);
+
+                    // canvasContext.drawImage(this, -1490,-0);
+
+                    // canvasContext.restore();
+
+                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                    canvasContext.rotate(Math.PI * 0.5);
+                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+                    canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+
+                    // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
+
+
+                    break;
+
+                // @details 이미지 회전값이 90 기운 경우
+                case "rotate(270deg)":
+                    //회전하기전에 정사각형을 만들어주자.
+                    if (canvas.width < canvas.height) {
+                        canvas.width = canvas.height;
+                    } else {
+                        canvas.height = canvas.width;
+                    }
+                    // @details 90° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+
+
+
+
+                    // canvasContext.rotate((90) * Math.PI / 180);
+
+                    //캔버스의 중심점 설정.
+                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                    canvasContext.rotate(Math.PI * 1.5);
+                    //회전시킨 후 다시 중심점 0,0으로 설정.
+                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+
+
+                    // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
+                    canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    break;
+            }
+        }
         // run the webcam image through the image model
         async function predict() {
             // document.getElementById("myCanvas").src = getBase64Image();
             // var image = document.getElementById("ToneImage")
-            var image = document.getElementById("myCanvas");
+            var image;
+            image = document.getElementById("realImage");
             const prediction = await model.predict(image, false);
             for (let i = 0; i < maxPredictions; i++) {
                 const classPrediction =
-                    prediction[i].className + ": " + prediction[i].probability.toFixed(2) * 100;
+                    prediction[i].className + ": " + (prediction[i].probability.toFixed(2) * 100).toFixed();
                 labelContainer.childNodes[i].innerHTML = classPrediction + "%";
             }
         }
