@@ -113,6 +113,7 @@
 
                     canvasContext2.drawImage(image, 0, 0, 200, 200);
                 }
+                document.getElementById("realImage").style.transform = "none";
                 $("#realImage").Jcrop({
                     onSelect: showCoords,
                 }, function () {
@@ -255,13 +256,17 @@
 
                                     // canvasContext.rotate((180) * Math.PI / 180);
 
+                                    canvasContext.save();
+                                    canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
                                     canvasContext.rotate(Math.PI);
+
 
 
 
                                     // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
 
-                                    canvasContext.drawImage(this, (tempImage.width * -1), (tempImage.height * -1));
+                                    canvasContext.drawImage(this, 0,0,200,200);
+                                    canvasContext.restore();
 
                                     break;
 
@@ -298,13 +303,16 @@
 
                                     // canvasContext.rotate((90) * Math.PI / 180);
 
-                                    canvasContext.rotate(Math.PI / 2);
+                                    canvasContext.save();
+                                    canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                                    canvasContext.rotate(Math.PI * 1.5);
 
 
 
                                     // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
 
-                                    canvasContext.drawImage(this, 0, (tempImage.height * -1));
+                                    canvasContext.drawImage(this, -(tempImage.height / 2), (tempImage.width / 2) - 200, 200, 200);
+                                    canvasContext.restore();
                                     break;
                             }
                         });
