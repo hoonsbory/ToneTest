@@ -214,7 +214,7 @@
                 let tempImage = new Image();
                 reader.onload = function (e) {
                     tempImage.src = e.target.result;
-                    tempImage.onload = function () {
+                    tempImage.onload = async function () {
 
 
 
@@ -237,7 +237,7 @@
                         $('#originalImg').attr('src', e.target.result);
                         $("#realImage").Jcrop({
                             onSelect: showCoords,
-                        }, function () {
+                        }, await function () {
                             jcropApi = this;
                         });
                         document.getElementsByClassName("jcrop-holder")[0].style.backgroundColor = "unset";
