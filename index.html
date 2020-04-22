@@ -249,7 +249,7 @@
 
                         EXIF.getData(fileInfo, () => {
                             if (navigator.userAgent.indexOf('Mobile') != -1) {
-                                canvasContext.drawImage(this, 0, 0, 200, 200);
+                                canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
                                 // console.log("모바일기기입니다.")
                                 return
                             }
