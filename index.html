@@ -42,7 +42,7 @@
             <!-- <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;" -->
             <!-- alt="your image" /> -->
             <img class="file-upload-image" id="realImage" src="#" width="200px" height="200px" alt="your image" />
-            <img id="originalImg"  style="display: none;" />
+            <img id="originalImg" style="display: none;" />
             <div class="image-title-wrap">
                 <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
                         class="image-title">Uploaded Image</span></button>
@@ -233,7 +233,7 @@
                         $('.image-upload-wrap').hide();
                         $('.file-upload-image').removeAttr("style");
                         $('.file-upload-image').attr('src', e.target.result);
-                        
+
                         $('#originalImg').attr('src', e.target.result);
                         $("#realImage").Jcrop({
                             onSelect: showCoords,
@@ -245,7 +245,9 @@
                         $('.file-upload-content').show();
                         $('.image-title').html(input.files[0].name);
 
+                        canvas.width = tempImage.width;
 
+                        canvas.height = tempImage.height;
 
                         EXIF.getData(fileInfo, () => {
                             if (navigator.userAgent.indexOf('Mobile') != -1) {
@@ -257,9 +259,7 @@
 
                             const orientation = EXIF.getTag(fileInfo, "Orientation");
                             console.log(orientation);
-                            canvas.width = tempImage.width;
 
-                            canvas.height =  tempImage.height;
                             switch (orientation) {
 
                                 // @details 이미지 회전값이 0인경우 ( 정방향 )
@@ -281,7 +281,7 @@
                                     document.getElementById("originalImg").style.transform = "rotate( 180deg )";
                                     document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 180deg )";
                                     document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(180deg)";
-                                    
+
 
 
 
@@ -373,7 +373,7 @@
 
 
                 }
-                
+
                 reader.readAsDataURL(fileInfo);
 
 
@@ -447,7 +447,7 @@
             document.getElementsByClassName("file-upload-image")[1].style.transform = rotate;
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = rotate;
 
-            var canvas =  document.getElementById("copyCanvas");
+            var canvas = document.getElementById("copyCanvas");
             var canvasContext = canvas.getContext("2d");
 
             canvas.width = document.getElementById("originalImg").width;
@@ -460,7 +460,7 @@
 
                     canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
                     break;
-               
+
                 // @details 이미지 회전값이 180 기운 경우
                 case "rotate(180deg)":
 
