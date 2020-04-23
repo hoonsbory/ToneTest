@@ -651,12 +651,12 @@
         function refresh() {
             document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = true;
-            document.getElementById("originalImg").style.transform = "none";
+            var rotate = document.getElementById("originalImg").style.transform;
             var image = document.getElementById("originalImg");
             document.getElementsByClassName("file-upload-image")[1].src = image.src;
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.src = image.src;
-            document.getElementsByClassName("file-upload-image")[1].style.transform = "none";
-            document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "none";
+            document.getElementsByClassName("file-upload-image")[1].style.transform =rotate;
+            document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform =rotate;
             
             var canvas = document.getElementById("copyCanvas");
             var canvasContext = canvas.getContext("2d");
@@ -665,7 +665,6 @@
             canvas.height = document.getElementById("originalImg").height;
             
             canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
-            // var rotate = document.getElementById("originalImg").style.transform;
             // console.log(rotate);
             // switch (rotate) {
 
