@@ -578,14 +578,13 @@
                 rtx.rotate(Math.PI * -0.5);
 
             }
-
-            //회전시킨 후 다시 중심점 0,0으로 설정.
             rtx.translate(-rotateCanvas.width / 2, -rotateCanvas.height / 2);
-
-
-            // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
             rtx.drawImage(canvas, 0, 0, rotateCanvas.width, rotateCanvas.height);
 
+
+
+            //회전용 캔버스의 내용을 다시 메인 캔버스에 복사해준다. 이미지를 회전시켜 캔버스에 그리면 편하나, 원래 이미지를 회전시킨건 단순 css를 통한 회전이다
+            //캔버스에는 회전이 적용되지않은 원래의 이미지가 그려지기 때문에 메인캔버스의 그림을 불러와 서브캔버스에 회전한 상태를 그린 후, 다시 서브에서 메인으로 옮겨 그린다.
             canvas.width = rotateCanvas.width;
             canvas.height = rotateCanvas.height;
 
@@ -653,21 +652,21 @@
         function refresh() {
             document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = true;
-            // var rotate = document.getElementById("originalImg").style.transform;
             document.getElementById("originalImg").style.transform = "none";
             var image = document.getElementById("originalImg");
             document.getElementsByClassName("file-upload-image")[1].src = image.src;
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.src = image.src;
             document.getElementsByClassName("file-upload-image")[1].style.transform = "none";
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "none";
-
+            
             var canvas = document.getElementById("copyCanvas");
             var canvasContext = canvas.getContext("2d");
-
+            
             canvas.width = document.getElementById("originalImg").width;
             canvas.height = document.getElementById("originalImg").height;
-
+            
             canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
+            // var rotate = document.getElementById("originalImg").style.transform;
             // console.log(rotate);
             // switch (rotate) {
 
