@@ -239,8 +239,8 @@
 
 
                         $('.image-upload-wrap').hide();
-                        $('.file-upload-image').removeAttr("style");
                         $('.file-upload-image').attr('src', e.target.result);
+                        $('.file-upload-image').removeAttr("style");
 
                         $('#originalImg').attr('src', e.target.result);
                         $("#realImage").Jcrop({
