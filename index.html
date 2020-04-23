@@ -237,6 +237,7 @@
                 var fileInfo = document.getElementById("fileInput").files[0];
                 EXIF.getData(fileInfo, async () => {
                     const orientation = EXIF.getTag(fileInfo, "Orientation");
+                    console.log("회전도는 "+orientation);
                     switch (orientation) {
 
                         // @details 이미지 회전값이 0인경우 ( 정방향 )
