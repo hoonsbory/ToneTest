@@ -253,9 +253,9 @@
                         // $('#realImage').attr('src', e.target.result);
                         $('.file-upload-content').show();
                         $('.image-title').html(input.files[0].name);
-
+                        console.log(navigator.userAgent);
                         if(navigator.userAgent.match(/iPhone|iPad|iPod/i) == null ? false : true){
-
+                        console.log("애플기기입니다.");
                         
                         EXIF.getData(fileInfo, async () => {
                             const orientation = EXIF.getTag(fileInfo, "Orientation");
