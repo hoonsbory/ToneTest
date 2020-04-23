@@ -1,3 +1,6 @@
+.btnGroup button{
+  height: 80px;
+}
 .title {
 	font-weight: bold;
 	font-size: 30px;

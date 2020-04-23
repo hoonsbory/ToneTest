@@ -8,13 +8,14 @@
 <body>
     <div>Teachable Machine Image Model</div>
     <!-- <button type="button" onclick="init()">Start</button> -->
+    <div class="btnGroup">
     <button type="button" onclick="predict()">피부톤 측정</button>
     <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
     <button id="cropImage" disabled="true">자르기</button>
-    <button type="button" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
-    <button type="button" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
-    <button onclick="editImg()">사진편집</button>
-
+    <button type="button" id="leftBtn" style="display: none;" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
+    <button type="button" id="rightBtn" style="display: none;" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
+    <button id="editBtn" onclick="editImg()">사진편집</button>
+</div>
     <canvas id="myCanvas" style="display: none;">
     </canvas>
     <canvas id="copyCanvas" style="display: none;">
@@ -213,6 +214,9 @@
 
 
         function editImg() {
+            document.getElementById("leftBtn").style.display = "inline";
+            document.getElementById("rightBtn").style.display = "inline";
+            document.getElementById("editBtn").disabled = true
             let canvas = document.getElementById("copyCanvas");
 
             let canvasContext = canvas.getContext("2d");
@@ -330,6 +334,9 @@
 
         function readURL(input, callback) {
             if (input.files && input.files[0]) {
+                document.getElementById("leftBtn").style.display = "none";
+                 document.getElementById("rightBtn").style.display = "none";
+                document.getElementById("editBtn").disabled = false;
                 document.getElementById("cropImage").disabled = true;
                 document.getElementById("refreshImg").disabled = true;
                 if (jcropApi) {
