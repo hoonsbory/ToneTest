@@ -266,8 +266,8 @@
                             //     // console.log("모바일기기입니다.")
                             //     return
                             // }
-
-
+                            fileInfo.exifdata = null;
+                            console.log(EXIF.getAllTags(fileInfo));
                             const orientation = EXIF.getTag(fileInfo, "Orientation");
                             console.log("회전도는 "+orientation);
 
