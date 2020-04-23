@@ -312,8 +312,8 @@
                                 // }
                                 $('.image-upload-wrap').hide();
                                 $('.file-upload-image').removeAttr("style");
-                                $('#originalImg').attr('src', this);
-                                $('.file-upload-image').attr('src', this);
+                                $('#originalImg').attr('src', tempImage.src);
+                                $('.file-upload-image').attr('src', tempImage.src);
 
                                 $("#realImage").Jcrop({
                                     onSelect: showCoords,
