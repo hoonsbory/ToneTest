@@ -9,8 +9,8 @@
     <div>Teachable Machine Image Model</div>
     <!-- <button type="button" onclick="init()">Start</button> -->
     <button type="button" onclick="predict()">피부톤 측정</button>
-    <button type="button" onclick="refresh()">사진 복구</button>
-    <button id="cropImage">자르기</button>
+    <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
+    <button id="cropImage" disabled="true">자르기</button>
 
     <canvas id="myCanvas" style="display: none;">
     </canvas>
@@ -57,6 +57,8 @@
         let jcropApi = null;
 
         $("#cropImage").click(function () {
+            document.getElementById("cropImage").disabled = true;
+            document.getElementById("refreshImg").disabled = false;
             var imgClo = new Image();
             imgClo.src = document.getElementById("realImage").src;
             imgClo.addEventListener('load', function () {
@@ -203,7 +205,8 @@
 
         function readURL(input) {
             if (input.files && input.files[0]) {
-
+                document.getElementById("cropImage").disabled = true;
+                document.getElementById("refreshImg").disabled = true;
                 if (jcropApi) {
                     jcropApi.destroy();
 
@@ -423,6 +426,7 @@
         }
         init();
         var showCoords = function (c) {
+            document.getElementById("cropImage").disabled = false;
             x = c.x;
             y = c.y;
             w = c.w;
@@ -440,6 +444,8 @@
         }
 
         function refresh() {
+            document.getElementById("cropImage").disabled = true;
+            document.getElementById("refreshImg").disabled = true;
             var rotate = document.getElementById("originalImg").style.transform;
             var image = document.getElementById("originalImg");
             document.getElementsByClassName("file-upload-image")[1].src = image.src;
