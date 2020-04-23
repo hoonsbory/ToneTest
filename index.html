@@ -17,7 +17,7 @@
 
     <canvas id="myCanvas" style="display: none;">
     </canvas>
-    <canvas id="copyCanvas" style="display: block;">
+    <canvas id="copyCanvas" style="display: none;">
     </canvas>
     <canvas id="rotateCanvas" style="display: none;">
     </canvas>
@@ -48,7 +48,7 @@
             <!-- <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;" -->
             <!-- alt="your image" /> -->
             <img class="file-upload-image" id="realImage" src="#" width="200px" height="200px" alt="your image" />
-            <img id="originalImg" style="display: block;" />
+            <img id="originalImg" style="display: none;" />
             <div class="image-title-wrap">
                 <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
                         class="image-title">Uploaded Image</span></button>
@@ -730,7 +730,6 @@
                                     canvas.height = canvas.width;
                                 }
 
-                                console.log("ㅅㅂ");
                                 canvasContext.translate(canvas.width / 2, canvas.height / 2);
                                 canvasContext.rotate(Math.PI * 1.5);
                                 canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
