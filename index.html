@@ -679,7 +679,7 @@
                         case 1:
 
 
-                            canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                            canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
                             break;
 
                         case 3:
@@ -693,7 +693,7 @@
 
                             // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
 
-                            canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                            canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
 
                             break;
 
@@ -708,7 +708,7 @@
                             canvasContext.translate(canvas.width / 2, canvas.height / 2);
                             canvasContext.rotate(Math.PI * 0.5);
                             canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-                            canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                            canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
 
 
 
@@ -729,7 +729,7 @@
                             canvasContext.translate(canvas.width / 2, canvas.height / 2);
                             canvasContext.rotate(Math.PI * 1.5);
                             canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-                            canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                            canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
 
                             //회전하기전에 정사각형을 만들어주자.
                             break;
@@ -738,7 +738,7 @@
                   
                 })
             } else {
-                canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
 
 
               
