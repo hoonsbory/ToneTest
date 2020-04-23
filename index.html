@@ -36,7 +36,7 @@
             Image</button>
 
         <div class="image-upload-wrap">
-            <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+            <input class="file-upload-input" type='file' onchange="readURL(this,callback);" accept="image/*" />
             <div class="drag-text">
                 <h3>Drag and drop a file or select add Image</h3>
             </div>
@@ -208,7 +208,7 @@
         //     }
         // }  블롭을 통해 자동으로 로테이트하는 함수, 그러나 지원하지 않는 브라우저가 많아서 포기.
 
-        function readURL(input) {
+        function readURL(input, callback) {
             if (input.files && input.files[0]) {
                 document.getElementById("cropImage").disabled = true;
                 document.getElementById("refreshImg").disabled = true;
@@ -222,9 +222,7 @@
                 let tempImage = new Image();
                 reader.onload = function (e) {
                     tempImage.src = e.target.result;
-                    tempImage.onload = function () {
-
-
+                    tempImage.onload = async function () {
 
                         // @breif 캔버스 위에 이미지 그리기
 
@@ -234,153 +232,177 @@
 
                         // @breif 캔버스의 이미지
 
+                        canvas.width = tempImage.width;
 
+                        canvas.height = tempImage.height;
 
-
+                        canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
 
                         $('.image-upload-wrap').hide();
                         $('.file-upload-image').removeAttr("style");
-                        $('.file-upload-image').attr('src', e.target.result);
+                        $('#originalImg').attr('src', getBase64Image());
+                        $('.file-upload-image').attr('src', document.getElementById("originalImg").src);
 
-                        $('#originalImg').attr('src', e.target.result);
                         $("#realImage").Jcrop({
                             onSelect: showCoords,
                         }, function () {
                             jcropApi = this;
                         });
-                       
+
                         // $('.file-upload-image').css("display", "none");
                         // $('#realImage').attr('src', e.target.result);
                         $('.file-upload-content').show();
                         $('.image-title').html(input.files[0].name);
 
-                        canvas.width = tempImage.width;
 
-                        canvas.height = tempImage.height;
+
+
+                        //회전값이 있는 사진을 정방향으로 돌리는 로직을 짜려했지만, 디바이스마다 회전값을 처리하는 기준이 달라서(특히 애플) 결국 포기하고 
+                        //있는 그대로의 사진을 올리고 유저가 회전시킬 수 있게 바꾸었다...
+
 
                         // canvasContext.drawImage(tempImage, 0, 0, canvas.width, canvas.height);
 
-                        EXIF.getData(fileInfo, () => {
-                            // if (navigator.userAgent.indexOf('Mobile') != -1) {
-                            //     canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-                            //     // console.log("모바일기기입니다.")
-                            //     return
-                            // }
-                            fileInfo.exifdata = null;
-                            console.log(EXIF.getAllTags(fileInfo));
-                            const orientation = EXIF.getTag(fileInfo, "Orientation");
-                            console.log("회전도는 "+orientation);
+                        //     await EXIF.getData(fileInfo, async () => {
+                        //         // if (navigator.userAgent.indexOf('Mobile') != -1) {
+                        //         //     canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                        //         //     // console.log("모바일기기입니다.")
+                        //         //     return
+                        //         // }
+                        //         fileInfo.exifdata = null;
+                        //         console.log(EXIF.getAllTags(fileInfo));
+                        //         const orientation = EXIF.getTag(fileInfo, "Orientation");
+                        //         console.log("회전도는 "+orientation);
 
-                            switch (orientation) {
+                        //         switch (orientation) {
 
-                                // @details 이미지 회전값이 0인경우 ( 정방향 )
-                                case undefined:
+                        //             // @details 이미지 회전값이 0인경우 ( 정방향 )
+                        //             case undefined:
 
-                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-                                    break;
-                                case 1:
+                        //                 canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                        //                 $('.image-upload-wrap').hide();
+                        // $('.file-upload-image').removeAttr("style");
+                        // $('.file-upload-image').attr('src', getBase64Image());
 
-                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-                                    break;
-                                case 0:
+                        //  $('#originalImg').attr('src', getBase64Image());
+                        //   $("#realImage").Jcrop({
+                        //     onSelect: showCoords,
+                        // }, function () {
+                        //     jcropApi = this;
+                        // });
 
-                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-                                    break;
-                                // @details 이미지 회전값이 180 기운 경우
-                                case 3:
-                                    // document.getElementById("realImage").style.transform = "rotate( 180deg )";
-                                    // document.getElementById("originalImg").style.transform = "rotate( 180deg )";
-                                    // document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 180deg )";
-                                    // document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(180deg)";
+                        // // $('.file-upload-image').css("display", "none");
+                        // // $('#realImage').attr('src', e.target.result);
+                        // $('.file-upload-content').show();
+                        // $('.image-title').html(input.files[0].name);
+                        //             //    callback(canvas);
 
+                        //                 break;
+                        //             case 1:
 
+                        //                 canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                        //                 break;
+                        //             case 0:
 
-
-
-                                    // canvasContext.rotate((180) * Math.PI / 180);
-
-                                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
-                                    canvasContext.rotate(Math.PI);
-                                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-
-
-
-
-                                    // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
-
-                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-
-                                    break;
-
-                                // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
-                                case 6:
-                                    if (canvas.width < canvas.height) {
-                                        canvas.width = canvas.height;
-                                    } else {
-                                        canvas.height = canvas.width;
-                                    }
-                                    // document.getElementById("realImage").style.transform = "rotate( 90deg )";
-                                    // document.getElementById("originalImg").style.transform = "rotate( 90deg )";
-                                    // document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 90deg )";
-                                    // document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(90deg)";
-                                    // @details 270° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
-
-
-                                    // tempImage.src = document.getElementById("ToneImage").getAttribute("src");
-                                    // canvasContext.save();
-                                    // canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
-                                    // canvasContext.rotate(Math.PI * 0.5);
-
-                                    // canvasContext.drawImage(this, -1490,-0);
-
-                                    // canvasContext.restore();
-                                    console.log("ㅅㅂ");
-                                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
-                                    canvasContext.rotate(Math.PI * 0.5);
-                                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-
-
-                                    // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
-
-
-                                    break;
-
-                                // @details 이미지 회전값이 90 기운 경우
-                                case 8:
-                                    //회전하기전에 정사각형을 만들어주자.
-                                    if (canvas.width < canvas.height) {
-                                        canvas.width = canvas.height;
-                                    } else {
-                                        canvas.height = canvas.width;
-                                    }
-                                    // document.getElementById("realImage").style.transform = "rotate( 270deg )";
-                                    // document.getElementById("originalImg").style.transform = "rotate( 270deg )";
-                                    // document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 270deg )";
-                                    // document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(270deg)";
-                                    // @details 90° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+                        //                 canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                        //                 break;
+                        //             // @details 이미지 회전값이 180 기운 경우
+                        //             case 3:
+                        //                 // document.getElementById("realImage").style.transform = "rotate( 180deg )";
+                        //                 // document.getElementById("originalImg").style.transform = "rotate( 180deg )";
+                        //                 // document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 180deg )";
+                        //                 // document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(180deg)";
 
 
 
 
-                                    // canvasContext.rotate((90) * Math.PI / 180);
 
-                                    //캔버스의 중심점 설정.
-                                    canvasContext.translate(canvas.width / 2, canvas.height / 2);
-                                    canvasContext.rotate(Math.PI * 1.5);
-                                    //회전시킨 후 다시 중심점 0,0으로 설정.
-                                    canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+                        //                 // canvasContext.rotate((180) * Math.PI / 180);
+
+                        //                 canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                        //                 canvasContext.rotate(Math.PI);
+                        //                 canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
 
 
-                                    // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
-                                    canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
-                                    break;
-                            }
-                        });
+
+
+                        //                 // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
+
+                        //                 canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+                        //                 break;
+
+                        //             // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
+                        //             case 6:
+                        //                 if (canvas.width < canvas.height) {
+                        //                     canvas.width = canvas.height;
+                        //                 } else {
+                        //                     canvas.height = canvas.width;
+                        //                 }
+                        //                 // document.getElementById("realImage").style.transform = "rotate( 90deg )";
+                        //                 // document.getElementById("originalImg").style.transform = "rotate( 90deg )";
+                        //                 // document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 90deg )";
+                        //                 // document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(90deg)";
+                        //                 // @details 270° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+
+
+                        //                 // tempImage.src = document.getElementById("ToneImage").getAttribute("src");
+                        //                 // canvasContext.save();
+                        //                 // canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
+                        //                 // canvasContext.rotate(Math.PI * 0.5);
+
+                        //                 // canvasContext.drawImage(this, -1490,-0);
+
+                        //                 // canvasContext.restore();
+                        //                 console.log("ㅅㅂ");
+                        //                 canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                        //                 canvasContext.rotate(Math.PI * 0.5);
+                        //                 canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+                        //                 canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+
+
+                        //                 // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
+
+
+                        //                 break;
+
+                        //             // @details 이미지 회전값이 90 기운 경우
+                        //             case 8:
+                        //                 //회전하기전에 정사각형을 만들어주자.
+                        //                 if (canvas.width < canvas.height) {
+                        //                     canvas.width = canvas.height;
+                        //                 } else {
+                        //                     canvas.height = canvas.width;
+                        //                 }
+                        //                 // document.getElementById("realImage").style.transform = "rotate( 270deg )";
+                        //                 // document.getElementById("originalImg").style.transform = "rotate( 270deg )";
+                        //                 // document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( 270deg )";
+                        //                 // document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate(270deg)";
+                        //                 // @details 90° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
+
+
+
+
+                        //                 // canvasContext.rotate((90) * Math.PI / 180);
+
+                        //                 //캔버스의 중심점 설정.
+                        //                 canvasContext.translate(canvas.width / 2, canvas.height / 2);
+                        //                 canvasContext.rotate(Math.PI * 1.5);
+                        //                 //회전시킨 후 다시 중심점 0,0으로 설정.
+                        //                 canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
+
+
+                        //                 // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
+                        //                 canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                        //                 break;
+                        //         }
+                        //     });
                         // let dataURI = canvas.toDataURL("image/jpeg");
 
                         // document.querySelector("#ToneImage").src = dataURI;
                     };
+
 
 
                 }
@@ -393,7 +415,26 @@
                 removeUpload();
             }
         }
+        function callback(canvas) {
+            let dataURI = canvas.toDataURL("image/png");
 
+            // document.querySelector("#ToneImage").src = dataURI;
+            $('.image-upload-wrap').hide();
+            $('.file-upload-image').removeAttr("style");
+            $('.file-upload-image').attr('src', getBase64Image());
+
+            $('#originalImg').attr('src', getBase64Image());
+            $("#realImage").Jcrop({
+                onSelect: showCoords,
+            }, function () {
+                jcropApi = this;
+            });
+
+            // $('.file-upload-image').css("display", "none");
+            // $('#realImage').attr('src', e.target.result);
+            $('.file-upload-content').show();
+            $('.image-title').html(input.files[0].name);
+        }
 
         function rotateImg() {
             if (rotateRate == 270) {
@@ -425,7 +466,7 @@
 
             // 캔버스의 중심점 설정.
             rtx.translate(rotateCanvas.width / 2, rotateCanvas.height / 2);
-                rtx.rotate(Math.PI * 0.5);
+            rtx.rotate(Math.PI * 0.5);
 
             //회전시킨 후 다시 중심점 0,0으로 설정.
             rtx.translate(-rotateCanvas.width / 2, -rotateCanvas.height / 2);
@@ -437,7 +478,7 @@
             canvas.width = rotateCanvas.width;
             canvas.height = rotateCanvas.height;
 
-            canvasContext.drawImage(rotateCanvas,0,0,rotateCanvas.width, rotateCanvas.height);
+            canvasContext.drawImage(rotateCanvas, 0, 0, rotateCanvas.width, rotateCanvas.height);
 
         }
 
