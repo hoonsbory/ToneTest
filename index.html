@@ -48,7 +48,7 @@
         <div class="file-upload-content">
             <!-- <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;" -->
             <!-- alt="your image" /> -->
-            <img class="file-upload-image" id="realImage" src="#" width="200px" height="200px" alt="your image" />
+            <img class="file-upload-image" id="realImage" src="#" width="400px" height="400px" alt="your image" />
             <img id="originalImg" style="display: none;" />
             <div class="image-title-wrap">
                 <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
@@ -82,8 +82,8 @@
 
                 var imgWidth = document.getElementById("copyCanvas").width;
                 var imgHeight = document.getElementById("copyCanvas").height;
-                var xRate = imgWidth / 200;
-                var yRate = imgHeight / 200;
+                var xRate = imgWidth / 400;
+                var yRate = imgHeight / 400;
                 canvas.width = w * xRate;
 
                 canvas.height = h * yRate;
