@@ -15,6 +15,7 @@
     <button type="button" id="leftBtn" style="display: none;" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
     <button type="button" id="rightBtn" style="display: none;" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
     <button id="editBtn" onclick="editImg()">사진편집</button>
+    <button onclick="apiTest()">api테스트</button>
 </div>
     <canvas id="myCanvas" style="display: none;">
     </canvas>
@@ -84,10 +85,20 @@
                 var imgHeight = document.getElementById("copyCanvas").height;
                 var xRate = imgWidth / 400;
                 var yRate = imgHeight / 400 ;
+                console.log("xRate: "+xRate);
+                console.log("yRate: "+yRate);
                 canvas.width = w * xRate;
 
                 canvas.height = h * yRate;
-
+                if(canvas.width==0||canvas.height==0){
+                    alert("더 이상 확대할 수 없습니다.")
+                    document.getElementById("cropImage").disabled = false;
+                    return;
+                }
+                console.log("x="+x);
+                console.log("y="+y);
+                console.log("w="+w);
+                console.log("h="+h);
                 canvasContext.drawImage(
 
                     document.getElementById("copyCanvas")
@@ -841,6 +852,21 @@
             // }
         }
         // run the webcam image through the image model
+        function apiTest(){
+            $.ajax({
+                url : "192.168.35.77/apiTest",
+                type : "post",
+                data : "123",
+                contentType : 'application/json;charset=UTF-8',
+                success: function(data){
+                    alert(data);
+                }, error: function(){
+                    alert("실패")
+                }
+            })
+
+        }
+
         async function predict() {
             // document.getElementById("myCanvas").src = getBase64Image();
             // var image = document.getElementById("ToneImage")
