@@ -28,8 +28,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <!-- <link type="text/css" rel="stylesheet" href="http://jcrop-cdn.tapmodo.com/v0.9.12/css/jquery.Jcrop.min.css" /> -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <!-- <script type="text/javascript" src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script> -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="Jcrop.min.js"></script>
     <script type="text/javascript" src="load-image.all.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
@@ -83,7 +83,7 @@
                 var imgWidth = document.getElementById("copyCanvas").width;
                 var imgHeight = document.getElementById("copyCanvas").height;
                 var xRate = imgWidth / 400;
-                var yRate = imgHeight / 400;
+                var yRate = imgHeight / 400 ;
                 canvas.width = w * xRate;
 
                 canvas.height = h * yRate;
@@ -294,7 +294,6 @@
                                     canvas.height = canvas.width;
                                 }
 
-                                console.log("ㅅㅂ");
                                 canvasContext.translate(canvas.width / 2, canvas.height / 2);
                                 canvasContext.rotate(Math.PI * 1.5);
                                 canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
@@ -518,6 +517,7 @@
 
                 reader.readAsDataURL(fileInfo);
 
+                $("#fileInput").val("");
 
 
             } else {
@@ -615,7 +615,7 @@
         // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
         // the link to your model provided by Teachable Machine export panel
-        const URL = "https://teachablemachine.withgoogle.com/models/aAuO6M9tb/";
+        const URL = "https://teachablemachine.withgoogle.com/models/wlZIpHmk4/";
 
         let model, webcam, labelContainer, maxPredictions;
 
