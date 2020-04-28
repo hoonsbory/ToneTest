@@ -9,20 +9,21 @@
     <div>Teachable Machine Image Model</div>
     <!-- <button type="button" onclick="init()">Start</button> -->
     <div class="btnGroup">
-    <button type="button" onclick="predict()">피부톤 측정</button>
-    <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
-    <button id="cropImage" disabled="true">자르기</button>
-    <button type="button" id="leftBtn" style="display: none;" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
-    <button type="button" id="rightBtn" style="display: none;" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
-    <button id="editBtn" onclick="editImg()">사진편집</button>
-    <button onclick="apiTest()">api테스트</button>
-</div>
+        <button type="button" onclick="predict()">피부톤 측정</button>
+        <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
+        <button id="cropImage" disabled="true">자르기</button>
+        <button type="button" id="leftBtn" style="display: none;" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
+        <button type="button" id="rightBtn" style="display: none;" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
+        <button id="editBtn" onclick="editImg()">사진편집</button>
+        <button onclick="apiTest()">api테스트</button>
+    </div>
     <canvas id="myCanvas" style="display: none;">
     </canvas>
     <canvas id="copyCanvas" style="display: none;">
     </canvas>
     <canvas id="rotateCanvas" style="display: none;">
     </canvas>
+    <p id="resultText"></p>
     <div id="webcam-container"></div>
     <div id="label-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
@@ -59,12 +60,47 @@
     </div>
     <script type="text/javascript">
         var rotateRate = 0;
+        var calResult = [];
+
+        var colorGroup = [
+            [255, 233, 196],
+            [254, 224, 174],
+            [253, 215, 153],
+            [244, 203, 149],
+            [238, 219, 179],
+            [238, 210, 160],
+            [232, 191, 139],
+            [223, 180, 112],
+            [254, 236, 224],
+            [255, 227, 213],
+            [255, 222, 203],
+            [250, 208, 184],
+            [248, 230, 216],
+            [249, 226, 208],
+            [246, 216, 192],
+            [236, 205, 177]
+        ]
+        // var color1 = [221, 250, 123];
+        // var color2 = [221, 250, 123];
+        // var color3 = [221, 250, 123];
+        // var color4 = [221, 250, 123];
+        // var color5 = [221, 250, 123];
+        // var color6 = [221, 250, 123];
+        // var color7 = [221, 250, 123];
+        // var color8 = [221, 250, 123];
+        // var color9 = [221, 250, 123];
+        // var color10 = [221, 250, 123];
+        // var color11 = [221, 250, 123];
+        // var color12 = [221, 250, 123];
+        // var color13 = [221, 250, 123];
+        // var color14 = [221, 250, 123];
+        // var color15 = [221, 250, 123];
+        // var color16 = [221, 250, 123];
         var x;
         var y;
         var w;
         var h;
         let jcropApi = null;
-
         $("#cropImage").click(function () {
             document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = false;
@@ -84,21 +120,21 @@
                 var imgWidth = document.getElementById("copyCanvas").width;
                 var imgHeight = document.getElementById("copyCanvas").height;
                 var xRate = imgWidth / 400;
-                var yRate = imgHeight / 400 ;
-                console.log("xRate: "+xRate);
-                console.log("yRate: "+yRate);
+                var yRate = imgHeight / 400;
+                console.log("xRate: " + xRate);
+                console.log("yRate: " + yRate);
                 canvas.width = w * xRate;
 
                 canvas.height = h * yRate;
-                if(canvas.width==0||canvas.height==0){
+                if (canvas.width == 0 || canvas.height == 0) {
                     alert("더 이상 확대할 수 없습니다.")
                     document.getElementById("cropImage").disabled = false;
                     return;
                 }
-                console.log("x="+x);
-                console.log("y="+y);
-                console.log("w="+w);
-                console.log("h="+h);
+                console.log("x=" + x);
+                console.log("y=" + y);
+                console.log("w=" + w);
+                console.log("h=" + h);
                 canvasContext.drawImage(
 
                     document.getElementById("copyCanvas")
@@ -345,7 +381,7 @@
         function readURL(input, callback) {
             if (input.files && input.files[0]) {
                 document.getElementById("leftBtn").style.display = "none";
-                 document.getElementById("rightBtn").style.display = "none";
+                document.getElementById("rightBtn").style.display = "none";
                 document.getElementById("editBtn").disabled = false;
                 document.getElementById("cropImage").disabled = true;
                 document.getElementById("refreshImg").disabled = true;
@@ -852,15 +888,44 @@
             // }
         }
         // run the webcam image through the image model
-        function apiTest(){
+        function apiTest() {
             $.ajax({
-                url : "https://192.168.35.77:80/apiTest",
-                type : "post",
-                data : "123",
-                contentType : 'application/json;charset=UTF-8',
-                success: function(data){
-                    alert(data);
-                }, error: function(){
+                url: "https://192.168.35.77:80/apiTest",
+                type: "post",
+                data: document.getElementById("realImage").src,
+                contentType: 'application/json;charset=UTF-8',
+                success: function (data) {
+                    console.log(data.red);
+                    console.log(data.green);
+                    console.log(data.blue);
+                    for (var i = 0; i < 16; i++) {
+                        var color = "color" + i;
+                        var red = (data.red - colorGroup[i][0]);
+                        red = red < 0 ? -(red) : red;
+                        var green = (data.green - colorGroup[i][1]);
+                        green = green < 0 ? -(green) : green;
+                        var blue = (data.blue - colorGroup[i][2]);
+                        blue = blue < 0 ? -(blue) : blue;
+
+                        calResult.push([ red + green + blue,i]);
+
+                    }
+                    calResult.sort(function (a, b) { // 오름차순
+                        return a[0] - b[0];
+                    });
+                    console.log(calResult);
+                    var colorNum = calResult[0][1];
+                    console.log(colorNum);
+                    if(0<=colorNum&&colorNum<=3){
+                        document.getElementById("resultText").innerText = "봄 웜톤입니다!"
+                    }else if(4<=colorNum&&colorNum<=7){
+                        document.getElementById("resultText").innerText = "가을 웜톤입니다!"
+                    }else if(8<=colorNum&&colorNum<=11){
+                        document.getElementById("resultText").innerText = "여름 쿨톤입니다!"
+                    }else{
+                        document.getElementById("resultText").innerText = "겨울 쿨톤입니다!"
+                    }
+                }, error: function () {
                     alert("실패")
                 }
             })
