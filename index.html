@@ -891,9 +891,9 @@
         function apiTest() {
             $.ajax({
                 url: "https://jaehoon-dayoff.ml:8443/TopBannerList",
-                type: "post",
-                data: document.getElementById("realImage").src,
-                contentType: 'application/json;charset=UTF-8',
+                type: "get",
+                // data: document.getElementById("realImage").src,
+                // contentType: 'application/json;charset=UTF-8',
                 success: function (data) {
                     console.log(data);
                     // console.log(data.red);
