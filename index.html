@@ -890,41 +890,42 @@
         // run the webcam image through the image model
         function apiTest() {
             $.ajax({
-                url: "https://192.168.35.77:80/apiTest",
+                url: "https://jaehoon-dayoff.ml:8443/TopBannerList",
                 type: "post",
                 data: document.getElementById("realImage").src,
                 contentType: 'application/json;charset=UTF-8',
                 success: function (data) {
-                    console.log(data.red);
-                    console.log(data.green);
-                    console.log(data.blue);
-                    for (var i = 0; i < 16; i++) {
-                        var color = "color" + i;
-                        var red = (data.red - colorGroup[i][0]);
-                        red = red < 0 ? -(red) : red;
-                        var green = (data.green - colorGroup[i][1]);
-                        green = green < 0 ? -(green) : green;
-                        var blue = (data.blue - colorGroup[i][2]);
-                        blue = blue < 0 ? -(blue) : blue;
+                    console.log(data);
+                    // console.log(data.red);
+                    // console.log(data.green);
+                    // console.log(data.blue);
+                    // for (var i = 0; i < 16; i++) {
+                    //     var color = "color" + i;
+                    //     var red = (data.red - colorGroup[i][0]);
+                    //     red = red < 0 ? -(red) : red;
+                    //     var green = (data.green - colorGroup[i][1]);
+                    //     green = green < 0 ? -(green) : green;
+                    //     var blue = (data.blue - colorGroup[i][2]);
+                    //     blue = blue < 0 ? -(blue) : blue;
 
-                        calResult.push([ red + green + blue,i]);
+                    //     calResult.push([ red + green + blue,i]);
 
-                    }
-                    calResult.sort(function (a, b) { // 오름차순
-                        return a[0] - b[0];
-                    });
-                    console.log(calResult);
-                    var colorNum = calResult[0][1];
-                    console.log(colorNum);
-                    if(0<=colorNum&&colorNum<=3){
-                        document.getElementById("resultText").innerText = "봄 웜톤입니다!"
-                    }else if(4<=colorNum&&colorNum<=7){
-                        document.getElementById("resultText").innerText = "가을 웜톤입니다!"
-                    }else if(8<=colorNum&&colorNum<=11){
-                        document.getElementById("resultText").innerText = "여름 쿨톤입니다!"
-                    }else{
-                        document.getElementById("resultText").innerText = "겨울 쿨톤입니다!"
-                    }
+                    // }
+                    // calResult.sort(function (a, b) { // 오름차순
+                    //     return a[0] - b[0];
+                    // });
+                    // console.log(calResult);
+                    // var colorNum = calResult[0][1];
+                    // console.log(colorNum);
+                    // if(0<=colorNum&&colorNum<=3){
+                    //     document.getElementById("resultText").innerText = "봄 웜톤입니다!"
+                    // }else if(4<=colorNum&&colorNum<=7){
+                    //     document.getElementById("resultText").innerText = "가을 웜톤입니다!"
+                    // }else if(8<=colorNum&&colorNum<=11){
+                    //     document.getElementById("resultText").innerText = "여름 쿨톤입니다!"
+                    // }else{
+                    //     document.getElementById("resultText").innerText = "겨울 쿨톤입니다!"
+                    // }
                 }, error: function () {
                     alert("실패")
                 }
