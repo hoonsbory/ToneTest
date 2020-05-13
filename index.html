@@ -2,20 +2,16 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
-    <div>Teachable Machine Image Model</div>
-    <!-- <button type="button" onclick="init()">Start</button> -->
     <div class="btnGroup">
-        <button type="button" onclick="predict()">피부톤 측정</button>
         <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
-        <button id="cropImage" disabled="true">자르기</button>
+        <button id="cropImage" onclick="crop()" disabled="true">자르기</button>
         <button type="button" id="leftBtn" style="display: none;" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
         <button type="button" id="rightBtn" style="display: none;" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
         <button id="editBtn" onclick="editImg()">사진편집</button>
-        <button onclick="apiTest()">api테스트</button>
     </div>
     <canvas id="myCanvas" style="display: none;">
     </canvas>
@@ -24,45 +20,202 @@
     <canvas id="rotateCanvas" style="display: none;">
     </canvas>
     <p id="resultText"></p>
-    <div id="webcam-container"></div>
-    <div id="label-container"></div>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <!-- <link type="text/css" rel="stylesheet" href="http://jcrop-cdn.tapmodo.com/v0.9.12/css/jquery.Jcrop.min.css" /> -->
-    <!-- <script type="text/javascript" src="http://jcrop-cdn.tapmodo.com/v0.9.12/js/jquery.Jcrop.min.js"></script> -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="Jcrop.min.js"></script>
-    <script type="text/javascript" src="load-image.all.min.js"></script>
+    <script src="/static/js/Jcrop.min.js"></script>
+    <script type="text/javascript" src="/static/js/load-image.all.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 
     <div class="file-upload">
-        <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add
-            Image</button>
 
         <div class="image-upload-wrap">
-            <input class="file-upload-input" id="fileInput" type='file' onchange="readURL(this,callback);"
-                accept="image/*" />
+            <input class="file-upload-input" id="fileInput" type='file' onclick="removeValue()"
+                onchange="readURL(this);" accept="image/*" />
             <div class="drag-text">
-                <h3>Drag and drop a file or select add Image</h3>
+                <h3>Drag and drop a file or select </h3>
             </div>
         </div>
-        <div class="file-upload-content">
-            <!-- <img class="file-upload-image" id="ToneImage" src="#" style="display : none; visibility: hidden;" -->
-            <!-- alt="your image" /> -->
-            <img class="file-upload-image" id="realImage" src="#" width="400px" height="400px" alt="your image" />
-            <img id="originalImg" style="display: none;" />
-            <div class="image-title-wrap">
-                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
-                        class="image-title">Uploaded Image</span></button>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-        var rotateRate = 0;
-        var calResult = [];
 
-        var colorGroup = [
+        <div id="slider" style="display: none;">
+
+            <a class="control_next">다음</a>
+            <a class="control_prev"></a>
+            <ul>
+                <li>
+                    <div class="file-upload-content">
+                        <img class="file-upload-image" id="realImage" src="#" width="400px" height="400px"
+                            alt="your image" />
+                        <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
+                            class="remove-image">새로운 파일로 재시도</button>
+                            <button onclick="next()">다음>></button>
+                            <div id="failColor" style="display : none; height: 25px; width: 25px; border-radius: 15px;"> </div><span style="display: none;">사진의 상당부분이 피부색이 아닙니다. 다시 업로드하세요 </span>
+                        <img id="originalImg" style="display: none;" />
+                    </div>
+
+                </li>
+                <li>
+                    <div class="question">
+                        <p>1.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+
+                </li>
+                <li>
+                    <div class="question">
+                        <p>2.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="question">
+                        <p>3.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="question">
+                        <p>4.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="question">
+                        <p>5.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="question">
+                        <p>6.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+                </li>
+                <li>
+                    <div class="question">
+                        <p>7.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                    </div>
+                    <div class="choose">
+                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+
+
+
+        var slideCount = $('#slider ul li').length;
+        var slideWidth = $('#slider ul li').width();
+        var slideHeight = $('#slider ul li').height();
+        var sliderUlWidth = slideCount * slideWidth;
+
+
+        $('#slider ul').css({ width: sliderUlWidth, marginLeft: - slideWidth });
+
+        $('#slider ul li:last-child').prependTo('#slider ul');
+
+
+
+        function moveLeft() {
+            slideCheck--;
+            var slideWidth = $('#slider ul li').width();
+            $('#slider ul').animate({
+
+                left: + slideWidth
+            }, 400, function () {
+                $('#slider ul li:last-child').prependTo('#slider ul');
+                $('#slider ul').css('left', '');
+            });
+
+        };
+
+        function moveRight(tone) {
+            console.log(answerStack);
+            slideCheck++;
+            if (tone == "worm") {
+                answerStack.push("worm");
+            } else if (tone == "cool") {
+                answerStack.push("cool");
+            }
+            if (slideCheck == 8) {
+                var worm = 0;
+                var cool = 0;
+                for (var i = 0; i < answerStack.length; i++) {
+                    if (answerStack[i] == "worm") {
+                        worm++;
+                    } else {
+                        cool++;
+                    }
+                }
+                console.log(worm);
+                console.log(cool);
+                if (worm < cool) {
+                    toneColor = "cool";
+                    season(coolColor);
+                    return
+                } else {
+                    toneColor = "worm";
+                    season(wormColor);
+                    return
+                }
+
+
+            }
+
+            var slideWidth = $('#slider ul li').width();
+            $('#slider ul').animate({
+                left: - slideWidth
+            }, 400, function () {
+                $('#slider ul li:first-child').appendTo('#slider ul');
+                $('#slider ul').css('left', '');
+            });
+
+        };
+
+        $('a.control_prev').click(function () {
+            moveLeft();
+        });
+
+        $('a.control_next').click(function () {
+            moveRight("aa");
+        });
+
+        var uploadCheck = false;
+        //슬라이드 위치체크
+        var slideCheck = 0;
+
+        //회전율
+        var rotateRate = 0;
+        //첫 비교 결과값을 담을 변수
+        var firstResult = [];
+        //비교 후 결과값을 담을 변수
+        var calResult = [];
+        var toneColor;
+        //맨처음 색상분석을 위한 색상리스트
+        var colorList = [
             [255, 233, 196],
             [254, 224, 174],
             [253, 215, 153],
@@ -78,30 +231,65 @@
             [248, 230, 216],
             [249, 226, 208],
             [246, 216, 192],
+            [236, 205, 177],
+            //여기까지 톤색깔
+            [220,0,18],//빨강
+            [0,152,68],//초록
+            [0,159,232],//하늘색
+            [29,32,135],//파랑
+            [126,48,141],//보라
+            [255,255,255],//하양
+            [0,0,0]//검정
+        ]
+        var wormColor = [
+            [255, 233, 196],
+            [254, 224, 174],
+            [253, 215, 153],
+            [244, 203, 149],
+            [238, 219, 179],
+            [238, 210, 160],
+            [232, 191, 139],
+            [223, 180, 112]
+
+        ]
+        var coolColor = [
+            [254, 236, 224],
+            [255, 227, 213],
+            [255, 222, 203],
+            [250, 208, 184],
+            [248, 230, 216],
+            [249, 226, 208],
+            [246, 216, 192],
             [236, 205, 177]
         ]
-        // var color1 = [221, 250, 123];
-        // var color2 = [221, 250, 123];
-        // var color3 = [221, 250, 123];
-        // var color4 = [221, 250, 123];
-        // var color5 = [221, 250, 123];
-        // var color6 = [221, 250, 123];
-        // var color7 = [221, 250, 123];
-        // var color8 = [221, 250, 123];
-        // var color9 = [221, 250, 123];
-        // var color10 = [221, 250, 123];
-        // var color11 = [221, 250, 123];
-        // var color12 = [221, 250, 123];
-        // var color13 = [221, 250, 123];
-        // var color14 = [221, 250, 123];
-        // var color15 = [221, 250, 123];
-        // var color16 = [221, 250, 123];
+        var imgRed;
+        var imgGreen;
+        var imgBlue;
+        var answerStack = [];
+        console.log(answerStack);
+
+        //크롭을 위한 좌표값
         var x;
         var y;
         var w;
         var h;
         let jcropApi = null;
-        $("#cropImage").click(function () {
+
+
+        function next(){
+            if(uploadCheck){
+                moveRight("");
+            }else{
+                apiTest();
+            }
+
+        }
+        function removeValue() {
+            $("#fileInput").val("");
+        }
+
+        function crop() {
+            uploadCheck = false;
             document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = false;
             var imgClo = new Image();
@@ -121,8 +309,6 @@
                 var imgHeight = document.getElementById("copyCanvas").height;
                 var xRate = imgWidth / 400;
                 var yRate = imgHeight / 400;
-                console.log("xRate: " + xRate);
-                console.log("yRate: " + yRate);
                 canvas.width = w * xRate;
 
                 canvas.height = h * yRate;
@@ -131,10 +317,6 @@
                     document.getElementById("cropImage").disabled = false;
                     return;
                 }
-                console.log("x=" + x);
-                console.log("y=" + y);
-                console.log("w=" + w);
-                console.log("h=" + h);
                 canvasContext.drawImage(
 
                     document.getElementById("copyCanvas")
@@ -210,8 +392,8 @@
 
             });
 
+        };
             //이미지 경로 설정
-        })
 
 
         // function readURL(input) {
@@ -378,7 +560,7 @@
 
         }
 
-        function readURL(input, callback) {
+        function readURL(input) {
             if (input.files && input.files[0]) {
                 document.getElementById("leftBtn").style.display = "none";
                 document.getElementById("rightBtn").style.display = "none";
@@ -407,8 +589,8 @@
 
                         // $('.file-upload-image').css("display", "none");
                         // $('#realImage').attr('src', e.target.result);
-                        $('.file-upload-content').show();
-                        $('.image-title').html(input.files[0].name);
+                        $('#slider').show();
+                        uploadCheck = false;
 
                     };
 
@@ -564,33 +746,12 @@
 
                 reader.readAsDataURL(fileInfo);
 
-                $("#fileInput").val("");
-
 
             } else {
                 removeUpload();
             }
         }
-        function callback(canvas) {
-            let dataURI = canvas.toDataURL("image/png");
 
-            // document.querySelector("#ToneImage").src = dataURI;
-            $('.image-upload-wrap').hide();
-            $('.file-upload-image').removeAttr("style");
-            $('.file-upload-image').attr('src', getBase64Image());
-
-            $('#originalImg').attr('src', getBase64Image());
-            $("#realImage").Jcrop({
-                onSelect: showCoords,
-            }, function () {
-                jcropApi = this;
-            });
-
-            // $('.file-upload-image').css("display", "none");
-            // $('#realImage').attr('src', e.target.result);
-            $('.file-upload-content').show();
-            $('.image-title').html(input.files[0].name);
-        }
 
         function rotateImg(plusMinus) {
             if (plusMinus == "right") {
@@ -658,33 +819,7 @@
             $('.image-upload-wrap').removeClass('image-dropping');
         });
 
-        // More API functions here:
-        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
 
-        // the link to your model provided by Teachable Machine export panel
-        const URL = "https://teachablemachine.withgoogle.com/models/wlZIpHmk4/";
-
-        let model, webcam, labelContainer, maxPredictions;
-
-        // Load the image model and setup the webcam
-        async function init() {
-            const modelURL = URL + "model.json";
-            const metadataURL = URL + "metadata.json";
-
-            // load the model and metadata
-            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-            // or files from your local hard drive
-            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-            model = await tmImage.load(modelURL, metadataURL);
-            maxPredictions = model.getTotalClasses();
-
-
-            labelContainer = document.getElementById("label-container");
-            for (let i = 0; i < maxPredictions; i++) { // and class labels
-                labelContainer.appendChild(document.createElement("div"));
-            }
-        }
-        init();
         var showCoords = function (c) {
             document.getElementById("cropImage").disabled = false;
             x = c.x;
@@ -693,6 +828,7 @@
             h = c.h;
         };
 
+        //캔버스의 이미지를 base64로 변환
         function getBase64Image() {
 
             var canvas = document.getElementById("copyCanvas");
@@ -704,6 +840,7 @@
         }
 
         function refresh() {
+            uploadCheck = false;
             document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = true;
             document.getElementById("originalImg").style.transform = "none";
@@ -788,7 +925,7 @@
                                 canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
                                 canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-                                //회전하기전에 정사각형을 만들어주자.
+                                //회전하기전에 정사각형을 만들어주자.x
                                 break;
                         }
 
@@ -801,154 +938,125 @@
 
                 }
             }
-            // var rotate = document.getElementById("originalImg").style.transform;
-            // console.log(rotate);
-            // switch (rotate) {
 
-            //     // @details 이미지 회전값이 0인경우 ( 정방향 )
-            //     case "":
-
-            //         canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
-            //         break;
-
-            //     // @details 이미지 회전값이 180 기운 경우
-            //     case "rotate(180deg)":
-
-            //         // canvasContext.rotate((180) * Math.PI / 180);
-
-            //         canvasContext.translate(canvas.width / 2, canvas.height / 2);
-            //         canvasContext.rotate(Math.PI);
-            //         canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-
-
-
-
-            //         // @details 이미지가 180° 회전 했을 경우 x, y축의 값을 업로드 이미지의 넓이와 높이를 음수로 변경한다.
-
-            //         canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-            //         break;
-
-            //     // @details 이미지 회전값이 270 기운 경우 ( 왼쪽으로 90 기운 경우 )
-            //     case "rotate(90deg)":
-            //         console.log("tlqkf");
-            //         if (canvas.width < canvas.height) {
-            //             canvas.width = canvas.height;
-            //         } else {
-            //             canvas.height = canvas.width;
-            //         }
-            //         // @details 270° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
-
-
-            //         // tempImage.src = document.getElementById("ToneImage").getAttribute("src");
-            //         // canvasContext.save();
-            //         // canvasContext.translate(tempImage.width / 2, tempImage.height / 2);
-            //         // canvasContext.rotate(Math.PI * 0.5);
-
-            //         // canvasContext.drawImage(this, -1490,-0);
-
-            //         // canvasContext.restore();
-
-            //         canvasContext.translate(canvas.width / 2, canvas.height / 2);
-            //         canvasContext.rotate(Math.PI * 0.5);
-            //         canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-            //         canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-
-            //         // @details 이미지가 270° 회전 했을 경우 x축의 값을 업로드 이미지의 넓이를 음수로 변경한다.
-
-
-            //         break;
-
-            //     // @details 이미지 회전값이 90 기운 경우
-            //     case "rotate(270deg)":
-            //         //회전하기전에 정사각형을 만들어주자.
-            //         if (canvas.width < canvas.height) {
-            //             canvas.width = canvas.height;
-            //         } else {
-            //             canvas.height = canvas.width;
-            //         }
-            //         // @details 90° 회전의 경우 이미지의 높이와 넓이를 서로 바꿔준다.
-
-
-
-
-            //         // canvasContext.rotate((90) * Math.PI / 180);
-
-            //         //캔버스의 중심점 설정.
-            //         canvasContext.translate(canvas.width / 2, canvas.height / 2);
-            //         canvasContext.rotate(Math.PI * 1.5);
-            //         //회전시킨 후 다시 중심점 0,0으로 설정.
-            //         canvasContext.translate(-canvas.width / 2, -canvas.height / 2);
-
-
-            //         // @details 이미지가 90° 회전 했을 경우 y축의 값을 업로드 이미지의 높이를 음수로 변경한다.
-            //         canvasContext.drawImage(image, 0, 0, canvas.width, canvas.height);
-            //         break;
-            // }
         }
         // run the webcam image through the image model
         function apiTest() {
             $.ajax({
-                url: "https://jaehoon-dayoff.ml:8443/TopBannerList",
-                type: "get",
-                // data: document.getElementById("realImage").src,
-                // contentType: 'application/json;charset=UTF-8',
+                url: "https://eng-contact-277115.dt.r.appspot.com//apiTest",
+                type: "post",
+                data: document.getElementById("realImage").src,
+                contentType: 'application/json;charset=UTF-8',
                 success: function (data) {
-                    console.log(data);
-                    // console.log(data.red);
-                    // console.log(data.green);
-                    // console.log(data.blue);
-                    // for (var i = 0; i < 16; i++) {
-                    //     var color = "color" + i;
-                    //     var red = (data.red - colorGroup[i][0]);
-                    //     red = red < 0 ? -(red) : red;
-                    //     var green = (data.green - colorGroup[i][1]);
-                    //     green = green < 0 ? -(green) : green;
-                    //     var blue = (data.blue - colorGroup[i][2]);
-                    //     blue = blue < 0 ? -(blue) : blue;
+                    imgRed = data.red;
+                    imgGreen = data.green;
+                    imgBlue = data.blue;
+                    for(var i =0; i<23;i++){
+                        var color = "color" + i;
+                var red = (imgRed - colorList[i][0]);
+                red = red < 0 ? -(red) : red;
+                var green = (imgGreen - colorList[i][1]);
+                green = green < 0 ? -(green) : green;
+                var blue = (imgBlue - colorList[i][2]);
+                blue = blue < 0 ? -(blue) : blue;
 
-                    //     calResult.push([ red + green + blue,i]);
+                firstResult.push([red + green + blue, i]);
+                    }
+                    firstResult.sort(function (a, b) { // 오름차순 
+                return a[0] - b[0];
+            });
+            console.log(red)
+            console.log(green)
+            console.log(blue);
+            var colorNum = firstResult[0][1];
+            var colorThumbnail = "rgb("+red+","+green+","+blue+")"
+            document.getElementById("failColor").style.backgroundColor = colorThumbnail;
+            document.getElementById("failColor").style.display = "inline-block";
+            document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
+            console.log(colorNum);
+                if(colorNum<16){
+                    moveRight("");
+                    uploadCheck = true;
+                    firstResult = [];
+                    return;
+                }else if(colorNum==16){
+                    alert("사진이 너무 빨갛습니다.")
+                }else if(colorNum==17){
+                    alert("사진이 너무 초록색입니다.")
+                }else if(colorNum==18){
+                    alert("사진이 너무 하늘색입니다.")
+                }else if(colorNum==19){
+                    alert("사진이 너무 파란색입니다.")
+                }else if(colorNum==20){
+                    alert("사진이 너무 보라색입니다.")
+                }else if(colorNum==21){
+                    alert("사진이 너무 하얀색입니다.")
+                }else{
+                    alert("사진이 너무 검정색입니다.")
+                }
+                firstResult = [];
 
-                    // }
-                    // calResult.sort(function (a, b) { // 오름차순
-                    //     return a[0] - b[0];
-                    // });
-                    // console.log(calResult);
-                    // var colorNum = calResult[0][1];
-                    // console.log(colorNum);
-                    // if(0<=colorNum&&colorNum<=3){
-                    //     document.getElementById("resultText").innerText = "봄 웜톤입니다!"
-                    // }else if(4<=colorNum&&colorNum<=7){
-                    //     document.getElementById("resultText").innerText = "가을 웜톤입니다!"
-                    // }else if(8<=colorNum&&colorNum<=11){
-                    //     document.getElementById("resultText").innerText = "여름 쿨톤입니다!"
-                    // }else{
-                    //     document.getElementById("resultText").innerText = "겨울 쿨톤입니다!"
-                    // }
                 }, error: function () {
                     alert("실패")
                 }
             })
 
         }
+        function season(colorGroup) {
+            for (var i = 0; i < 8; i++) {
+                var color = "color" + i;
+                var red = (imgRed - colorGroup[i][0]);
+                red = red < 0 ? -(red) : red;
+                var green = (imgGreen - colorGroup[i][1]);
+                green = green < 0 ? -(green) : green;
+                var blue = (imgBlue - colorGroup[i][2]);
+                blue = blue < 0 ? -(blue) : blue;
 
-        async function predict() {
-            // document.getElementById("myCanvas").src = getBase64Image();
-            // var image = document.getElementById("ToneImage")
-            var image;
-            image = document.getElementById("realImage");
-            const prediction = await model.predict(image, false);
-            for (let i = 0; i < maxPredictions; i++) {
-                const classPrediction =
-                    prediction[i].className + ": " + (prediction[i].probability.toFixed(2) * 100).toFixed();
-                labelContainer.childNodes[i].innerHTML = classPrediction + "%";
+                calResult.push([red + green + blue, i]);
+
             }
+            calResult.sort(function (a, b) { // 오름차순 
+                return a[0] - b[0];
+            });
+            console.log(calResult);
+            var colorNum = calResult[0][1];
+            console.log(colorNum);
+            if (0 <= colorNum && colorNum <= 3 && toneColor == "worm") {
+                document.getElementById("resultText").innerText = "봄 웜톤입니다!"
+            } else if (toneColor == "worm") {
+                document.getElementById("resultText").innerText = "가을 웜톤입니다!"
+            } else if (0 <= colorNum && colorNum <= 3 && toneColor == "cool") {
+                document.getElementById("resultText").innerText = "여름 쿨톤입니다!"
+            } else {
+                document.getElementById("resultText").innerText = "겨울 쿨톤입니다!"
+            }
+
+            calResult = [];
         }
-    </script>
+
+
 
     </script>
+    <script>
 
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://personalcolor.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
 </body>
 
 </html>
