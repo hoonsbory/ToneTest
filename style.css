@@ -2,7 +2,13 @@
   font-family: 'HS1Regular';
   font-style: normal;
   font-weight: 300;
-  src: url(/font/HSRegular.ttf) format("truetype");
+  src: url(font/HSRegular.ttf) format("truetype");
+}
+@font-face {
+  font-family: 'HS1Regular';
+  font-style: normal;
+  font-weight: 100;
+  src: url(font/HSThin.ttf) format("truetype");
 }
 html{
   font-size: 16px;
@@ -43,7 +49,8 @@ p{
   flex-direction: column;
   align-items: center;
   width: 100%;
-  background-image: url("https://hoonsbory.github.io/MyGitPage/static/media/main.4eb6be4e.png");  
+  background-image: url(mainBg.png);  
+  background-size: contain;
 }
 #mainTitle{
   margin-top: 2rem;
@@ -70,6 +77,12 @@ p{
 }
 #bgSpan{
   font-size: 3.5rem;
+  background: url(fontBg.png);
+  background-size: contain;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-color: dodgerblue;
+  -webkit-text-stroke-width: 1px ;
 }
 #noBgSpan{
   font-size: 3.5rem;
@@ -244,12 +257,15 @@ body {
 .drag-text {
   text-align: center;
 }
-
+.drag-text img{
+  width: 100px;
+  height: 80px;
+  margin-top: 20px;
+}
 .drag-text h3 {
   font-weight: 100;
   text-transform: uppercase;
   color: #15824B;
-  padding: 60px 0;
 }
 
 .file-upload-image {
