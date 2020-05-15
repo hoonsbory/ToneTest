@@ -1,7 +1,14 @@
+@font-face {
+  font-family: 'HS1Regular';
+  font-style: normal;
+  font-weight: 300;
+  src: url(/font/HS1.0Regular.ttf) format("truetype");
+}
 html{
   font-size: 16px;
 }
 body{
+  font-family: 'HS1Regular' !important;
   margin: 0;
 
 }
