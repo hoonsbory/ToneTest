@@ -1,21 +1,72 @@
-input[type=radio] { display:none; }
-
-input[type=radio] + label { 
-
-display: inline-block; 
-
-cursor: pointer; 
-
-line-height: 22px; 
-
-padding-left: 22px; 
-
-background: url('https://mask-pharm.shop/static/img/refresh.png') left/22px no-repeat; 
+html{
+  font-size: 16px;
+}
+body{
+  margin: 0;
 
 }
-
-input[type=radio]:checked + label { background-image: url('https://mask-pharm.shop/static/img/myPosition.png'); }
-
+p{
+  margin : 0;
+}
+@media(max-width : 767px){
+  html{
+    font-size : 14px;
+  }
+}
+#notice{
+  background-color: #ffffff;
+  background-color: rgba( 255, 255, 255, 0.4 );
+  font-size: 1.5rem;
+  color: royalblue;
+  margin-top: 2rem;
+  margin-bottom : 2rem;
+  padding-left : 2rem;
+  padding-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+#subTitle{
+  color: white;
+  background-color: royalblue;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+#mainbody{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-image: url("https://hoonsbory.github.io/MyGitPage/static/media/main.4eb6be4e.png");  
+}
+#mainTitle{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border : 2px solid royalblue;
+  background-color: #ffffff;
+  background-color: rgba( 255, 255, 255, 0.6);
+  border-radius: 25px;
+  padding-left : 1rem;
+  padding-right: 1rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+#mainTitle p {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 0;
+}
+#wormSpan{
+  background-color: rgba(255,233,196);
+}
+#coolSpan{
+  background-color: rgba( 255,227,213);
+}
+#bgSpan{
+  font-size: 3.5rem;
+}
+#noBgSpan{
+  font-size: 3.5rem;
+}
 .question{
   border-bottom: 1px solid black;
 }
@@ -116,10 +167,7 @@ body {
 }
 
 .file-upload {
-  background-color: #ffffff;
   width: 700px;
-  margin: 0 auto;
-  padding: 20px;
 }
 
 .file-upload-btn {
@@ -165,9 +213,14 @@ body {
 }
 
 .image-upload-wrap {
-  margin-top: 20px;
-  border: 4px dashed #1FB264;
-  position: relative;
+    border: 4px solid cornflowerblue;
+    position: relative;
+    border-radius: 100px;
+    width: 200px;
+    height: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
 }
 
 .image-dropping,
@@ -228,7 +281,7 @@ body {
 }
 /* jquery.Jcrop.min.css v0.9.12 (build:20130126) */
 .jcrop-holder{margin:auto;direction:ltr;text-align:left;}
-.jcrop-vline,.jcrop-hline{background:#FFF url(../img/Jcrop.gif);font-size:0;position:absolute;}
+.jcrop-vline,.jcrop-hline{background:#FFF url(Jcrop.gif);font-size:0;position:absolute;}
 .jcrop-vline{height:100%;width:1px!important;}
 .jcrop-vline.right{right:0;}
 .jcrop-hline{height:1px!important;width:100%;}
