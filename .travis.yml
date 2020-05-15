@@ -1,3 +1,4 @@
+language: java
 deploy:
     - provider: s3
       local_dir: deploy # before_deploy에서 생성한 디렉토리
