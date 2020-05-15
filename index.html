@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    
+
     <canvas id="myCanvas" style="display: none;">
     </canvas>
     <canvas id="copyCanvas" style="display: none;">
@@ -15,123 +15,130 @@
     <canvas id="rotateCanvas" style="display: none;">
     </canvas>
     <p id="resultText"></p>
+    <script src="color-thief.umd.js"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="Jcrop.min.js"></script>
     <script type="text/javascript" src="load-image.all.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-    <div class="header"><h1>메뉴</h1></div>
+    <div class="header">
+        <h1>메뉴</h1>
+    </div>
+
+
     <div id="mainbody">
         <div id="mainTitle">
             <p>나는 <span id="wormSpan">웜톤</span>일까? <span id="coolSpan">쿨톤</span>일까?</p>
             <span id="bgSpan">퍼스널컬러</span><span id="noBgSpan"> 진단</span>
         </div>
         <div id="subTitle">톤잘알이 되어 훈남,훈녀 되자!</div>
-    <div class="file-upload">
+        <div class="file-upload">
 
-        <div class="image-upload-wrap">
-            <input class="file-upload-input" id="fileInput" type='file' onclick="removeValue()"
-                onchange="readURL(this);" accept="image/*" />
-            <div class="drag-text">
-                <img src="camera.png"/>
-                <h3>내 피부 촬영 Or 업로드 </h3>
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" id="fileInput" type='file' onclick="removeValue()"
+                    onchange="readURL(this);" accept="image/*" />
+                <div class="drag-text">
+                    <img src="camera.png" />
+                    <h3>내 피부 촬영 Or 업로드 </h3>
+                </div>
             </div>
-        </div>
-        <div id="slider" style="display: none;">
+            <div id="slider" style="display: none;">
 
-            <a class="control_next">다음</a>
-            <a class="control_prev"></a>
-            <ul>
-                <li>
-                    <div class="file-upload-content">
-                        <img class="file-upload-image" id="realImage" src="#" width="400px" height="400px"
-                            alt="your image" />
-                        <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
-                            class="remove-image">새로운 파일로 재시도</button>
+                <a class="control_next">다음</a>
+                <a class="control_prev"></a>
+                <ul>
+                    <li>
+                        <div class="file-upload-content">
+                            <img class="file-upload-image" id="realImage" src="#" width="400px" height="400px"
+                                alt="your image" />
+                            <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
+                                class="remove-image">새로운 파일로 재시도</button>
                             <div id="btnGroup" style="display: none;">
                                 <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
                                 <button id="cropImage" onclick="crop()" disabled="true">자르기</button>
-                                <button type="button" id="leftBtn"  onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
+                                <button type="button" id="leftBtn" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
                                 <button type="button" id="rightBtn" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
                             </div>
-                                <button id="editBtn" style="display: none;" onclick="editImg()">사진편집</button>
+                            <button id="editBtn" style="display: none;" onclick="editImg()">사진편집</button>
                             <button onclick="next()">다음>></button>
-                            <div id="failColor" style="display : none; height: 25px; width: 25px; border-radius: 15px;"> </div><span style="display: none;">사진의 상당부분이 피부색이 아닙니다. 다시 업로드하세요 </span>
-                        <img id="originalImg" style="display: none;" />
-                    </div>
+                            <div id="failColor" style="display : none; height: 25px; width: 25px; border-radius: 15px;">
+                            </div><span style="display: none;">사진의 상당부분이 피부색이 아닙니다. 다시 업로드하세요 </span>
+                            <img id="originalImg" style="display: none;" />
+                        </div>
 
-                </li>
-                <li>
-                    <div class="question">
-                        <p>1.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>1.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
 
-                </li>
-                <li>
-                    <div class="question">
-                        <p>2.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="question">
-                        <p>3.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="question">
-                        <p>4.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="question">
-                        <p>5.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="question">
-                        <p>6.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="question">
-                        <p>7.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                    </div>
-                    <div class="choose">
-                        <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                        <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>2.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>3.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>4.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>5.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>6.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>7.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                        </div>
+                        <div class="choose">
+                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
+                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
         </div>
-
-
+        <div id="notice">※퍼스널컬러 진단을 위해서 <p>&nbsp;&nbsp;피부 촬용이 필요합니다.</p>
+        </div>
     </div>
-    <div id="notice">※퍼스널컬러 진단을 위해서 <p>&nbsp;&nbsp;피부 촬용이 필요합니다.</p></div>
-</div>
 
     <div id="disqus_thread"></div>
     <script type="text/javascript">
@@ -163,6 +170,66 @@
             });
 
         };
+        function color() {
+            var colorThief = new ColorThief();
+
+            var sourceImage = document.getElementById("realImage");
+            sourceImage.setAttribute('crossOrigin', '')
+
+            console.log(
+                colorThief.getColor(sourceImage)
+            );
+
+            // Display palette of colors
+            // e.g [[55,37,29],[213,193,136],[110,204,223]]
+            var imgRed = colorThief.getColor(sourceImage)[0];
+            var imgGreen = colorThief.getColor(sourceImage)[1];
+            var imgBlue = colorThief.getColor(sourceImage)[2];
+            for (var i = 0; i < colorList.length; i++) {
+                var color = "color" + i;
+                var red = (imgRed - colorList[i][0]);
+                red = red < 0 ? -(red) : red;
+                var green = (imgGreen - colorList[i][1]);
+                green = green < 0 ? -(green) : green;
+                var blue = (imgBlue - colorList[i][2]);
+                blue = blue < 0 ? -(blue) : blue;
+
+                firstResult.push([red + green + blue, i]);
+            }
+            firstResult.sort(function (a, b) { // 오름차순 
+                return a[0] - b[0];
+            });
+            var colorNum = firstResult[0][1];
+            var colorThumbnail = "rgb(" + red + "," + green + "," + blue + ")"
+            document.getElementById("failColor").style.backgroundColor = colorThumbnail;
+            document.getElementById("failColor").style.display = "inline-block";
+            document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
+            if (colorNum < 16) {
+                moveRight("");
+                document.getElementById("btnGroup").style.display = "none";
+                uploadCheck = true;
+                firstResult = [];
+                return;
+            } else if (colorNum == 16) {
+                alert("사진이 너무 빨갛습니다.")
+            } else if (colorNum == 17) {
+                alert("사진이 너무 초록색입니다.")
+            } else if (colorNum == 18) {
+                alert("사진이 너무 하늘색입니다.")
+            } else if (colorNum == 19) {
+                alert("사진이 너무 파란색입니다.")
+            } else if (colorNum == 20) {
+                alert("사진이 너무 보라색입니다.")
+            } else if (colorNum == 21) {
+                alert("사진이 너무 하얀색입니다.")
+            } else {
+                alert("사진이 너무 검정색입니다.")
+            }
+            firstResult = [];
+
+            // Display main color
+            // e.g [125, 189, 193]
+        }
 
         function moveRight(tone) {
             slideCheck++;
@@ -242,13 +309,13 @@
             [246, 216, 192],
             [236, 205, 177],
             //여기까지 톤색깔
-            [220,0,18],//빨강
-            [0,152,68],//초록
-            [0,159,232],//하늘색
-            [29,32,135],//파랑
-            [126,48,141],//보라
-            [255,255,255],//하양
-            [0,0,0]//검정
+            [220, 0, 18],//빨강
+            [0, 152, 68],//초록
+            [0, 159, 232],//하늘색
+            [29, 32, 135],//파랑
+            [126, 48, 141],//보라
+            [255, 255, 255],//하양
+            [0, 0, 0]//검정
         ]
         var wormColor = [
             [255, 233, 196],
@@ -284,11 +351,11 @@
         let jcropApi = null;
 
 
-        function next(){
-            if(uploadCheck){
+        function next() {
+            if (uploadCheck) {
                 moveRight("");
-            }else{
-                apiTest();
+            } else {
+                color();
             }
 
         }
@@ -300,104 +367,106 @@
             uploadCheck = false;
             document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = false;
-                //로드된 이미지를 캔버스에 출력
-                //복사용 캔버스에 복사함. 하나의 캔버스에서 자기 자신을 불러와 크롭해서 리드로우가 불가능하기 때문.
-                let canvas = document.getElementById("myCanvas");
+            //로드된 이미지를 캔버스에 출력
+            //복사용 캔버스에 복사함. 하나의 캔버스에서 자기 자신을 불러와 크롭해서 리드로우가 불가능하기 때문.
+            let canvas = document.getElementById("myCanvas");
 
-                let canvasContext = canvas.getContext("2d");
-
-
-
-                // @breif 캔버스 크기를 이미지 크기와 동일하게 지정
-
-                var imgWidth = document.getElementById("copyCanvas").width;
-                var imgHeight = document.getElementById("copyCanvas").height;
-                var xRate = imgWidth / 400;
-                var yRate = imgHeight / 400;
-                canvas.width = w * xRate;
-
-                canvas.height = h * yRate;
-                if (canvas.width == 0 || canvas.height == 0) {
-                    alert("더 이상 확대할 수 없습니다.")
-                    document.getElementById("cropImage").disabled = false;
-                    return;
-                }
-                canvasContext.drawImage(
-
-                    document.getElementById("copyCanvas")
-
-                    , x * xRate        // 자르기를 시작할 x좌표
-
-                    , y * yRate       // 자르기를 시작할 y좌표
-
-                    , w * xRate   // 잘라낸 이미지의 넓이
-
-                    , h * yRate    // 잘라낸 이미지의 높이
-
-                    , 0                                         // 캔버스에 이미지를 배치할 x좌표
-
-                    , 0                                         // 캔버스에 이미지를 배치할 y좌표
-
-                    , w * xRate  // 사용할 이미지의 넓이(이미지 스트레칭 또는 축소)
-
-                    , h * yRate  // 사용할 이미지의 높이(이미지 스트레칭 또는 축소)
-
-                );
-
-
-                // 로드된 이미지를 캔버스에 출력
-                let canvas2 = document.getElementById("copyCanvas");
-
-                let canvasContext2 = canvas2.getContext("2d");
+            let canvasContext = canvas.getContext("2d");
 
 
 
-                // @breif 캔버스 크기를 이미지 크기와 동일하게 지정
+            // @breif 캔버스 크기를 이미지 크기와 동일하게 지정
 
-                canvas2.width = document.getElementById("myCanvas").width;
+            var imgWidth = document.getElementById("copyCanvas").width;
+            var imgHeight = document.getElementById("copyCanvas").height;
+            var xRate = imgWidth / 400;
+            var yRate = imgHeight / 400;
+            canvas.width = w * xRate;
 
-                canvas2.height = document.getElementById("myCanvas").height;
+            canvas.height = h * yRate;
+            if (canvas.width == 0 || canvas.height == 0) {
+                alert("더 이상 확대할 수 없습니다.")
+                document.getElementById("cropImage").disabled = false;
+                return;
+            }
+            canvasContext.drawImage(
 
-                canvasContext2.drawImage(
+                document.getElementById("copyCanvas")
 
-                    document.getElementById("myCanvas"), 0, 0
+                , x * xRate        // 자르기를 시작할 x좌표
 
+                , y * yRate       // 자르기를 시작할 y좌표
 
-                );
+                , w * xRate   // 잘라낸 이미지의 넓이
 
+                , h * yRate    // 잘라낸 이미지의 높이
 
+                , 0                                         // 캔버스에 이미지를 배치할 x좌표
 
-                if (jcropApi) {
-                    jcropApi.destroy();
-                    jcropApi = null;
-                }
-                // let canvas2 = document.getElementById("copyCanvas");
+                , 0                                         // 캔버스에 이미지를 배치할 y좌표
 
-                // let canvasContext2 = canvas2.getContext("2d");
-                // var image = new Image();
-                // image.src = document.getElementById("realImage").src;
-                // image.onload = function () {
+                , w * xRate  // 사용할 이미지의 넓이(이미지 스트레칭 또는 축소)
 
-                //     canvasContext2.drawImage(image, 0, 0, 200, 200);
-                // }
-                $(".file-upload-image").attr("src", getBase64Image());
-                document.getElementById("realImage").style.transform = "none";
-                rotateRate = 0;
-                $("#realImage").Jcrop({
-                    onSelect: showCoords,
-                }, function () {
-                    jcropApi = this;
-                });
+                , h * yRate  // 사용할 이미지의 높이(이미지 스트레칭 또는 축소)
+
+            );
+
+            // console.log(canvas.getContext('2d').getImageData(50,50, 1, 1).data);
+            // getImageData로 특정 좌표의 컬러 값을 가져올 수 있다.
+
+            // 로드된 이미지를 캔버스에 출력
+            let canvas2 = document.getElementById("copyCanvas");
+
+            let canvasContext2 = canvas2.getContext("2d");
 
 
 
-                // @details JCROP을 종료한다.
+            // @breif 캔버스 크기를 이미지 크기와 동일하게 지정
+
+            canvas2.width = document.getElementById("myCanvas").width;
+
+            canvas2.height = document.getElementById("myCanvas").height;
+
+            canvasContext2.drawImage(
+
+                document.getElementById("myCanvas"), 0, 0
+
+
+            );
+
+
+
+            if (jcropApi) {
+                jcropApi.destroy();
+                jcropApi = null;
+            }
+            // let canvas2 = document.getElementById("copyCanvas");
+
+            // let canvasContext2 = canvas2.getContext("2d");
+            // var image = new Image();
+            // image.src = document.getElementById("realImage").src;
+            // image.onload = function () {
+
+            //     canvasContext2.drawImage(image, 0, 0, 200, 200);
+            // }
+            $(".file-upload-image").attr("src", getBase64Image());
+            document.getElementById("realImage").style.transform = "none";
+            rotateRate = 0;
+            $("#realImage").Jcrop({
+                onSelect: showCoords,
+            }, function () {
+                jcropApi = this;
+            });
+
+
+
+            // @details JCROP을 종료한다.
 
 
 
 
         };
-            //이미지 경로 설정
+        //이미지 경로 설정
 
 
         // function readURL(input) {
@@ -557,9 +626,9 @@
                     }, function () {
                         jcropApi = this;
                     });
-
-                    // $('.file-upload-image').css("display", "none");
-                    // $('#realImage').attr('src', e.target.result);
+                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className="dragBar";
+                    document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
+                    // 사진편집을 누르면 편집 테두리가 전체를 감싸도록 설정
                     $('.file-upload-content').show();
                 }
             }
@@ -568,8 +637,8 @@
 
         function readURL(input) {
             if (input.files && input.files[0]) {
-                
-            document.getElementById("editBtn").style.display = "inline";
+
+                document.getElementById("editBtn").style.display = "inline";
 
                 if (jcropApi) {
                     jcropApi.destroy();
@@ -944,64 +1013,64 @@
 
         }
         // run the webcam image through the image model
-        function apiTest() {
-            $.ajax({
-                url: "https://eng-contact-277115.dt.r.appspot.com/apiTest",
-                type: "post",
-                data: document.getElementById("realImage").src,
-                contentType: 'application/json;charset=UTF-8',
-                success: function (data) {
-                    imgRed = data.red;
-                    imgGreen = data.green;
-                    imgBlue = data.blue;
-                    for(var i =0; i<colorList.length;i++){
-                        var color = "color" + i;
-                var red = (imgRed - colorList[i][0]);
-                red = red < 0 ? -(red) : red;
-                var green = (imgGreen - colorList[i][1]);
-                green = green < 0 ? -(green) : green;
-                var blue = (imgBlue - colorList[i][2]);
-                blue = blue < 0 ? -(blue) : blue;
+        // function apiTest() {
+        //     $.ajax({
+        //         url: "https://eng-contact-277115.dt.r.appspot.com/apiTest",
+        //         type: "post",
+        //         data: document.getElementById("realImage").src,
+        //         contentType: 'application/json;charset=UTF-8',
+        //         success: function (data) {
+        //             imgRed = data.red;
+        //             imgGreen = data.green;
+        //             imgBlue = data.blue;
+        //             for(var i =0; i<colorList.length;i++){
+        //                 var color = "color" + i;
+        //         var red = (imgRed - colorList[i][0]);
+        //         red = red < 0 ? -(red) : red;
+        //         var green = (imgGreen - colorList[i][1]);
+        //         green = green < 0 ? -(green) : green;
+        //         var blue = (imgBlue - colorList[i][2]);
+        //         blue = blue < 0 ? -(blue) : blue;
 
-                firstResult.push([red + green + blue, i]);
-                    }
-                    firstResult.sort(function (a, b) { // 오름차순 
-                return a[0] - b[0];
-            });
-            var colorNum = firstResult[0][1];
-            var colorThumbnail = "rgb("+red+","+green+","+blue+")"
-            document.getElementById("failColor").style.backgroundColor = colorThumbnail;
-            document.getElementById("failColor").style.display = "inline-block";
-            document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
-                if(colorNum<16){
-                    moveRight("");
-                    document.getElementById("btnGroup").style.display = "none";
-                    uploadCheck = true;
-                    firstResult = [];
-                    return;
-                }else if(colorNum==16){
-                    alert("사진이 너무 빨갛습니다.")
-                }else if(colorNum==17){
-                    alert("사진이 너무 초록색입니다.")
-                }else if(colorNum==18){
-                    alert("사진이 너무 하늘색입니다.")
-                }else if(colorNum==19){
-                    alert("사진이 너무 파란색입니다.")
-                }else if(colorNum==20){
-                    alert("사진이 너무 보라색입니다.")
-                }else if(colorNum==21){
-                    alert("사진이 너무 하얀색입니다.")
-                }else{
-                    alert("사진이 너무 검정색입니다.")
-                }
-                firstResult = [];
+        //         firstResult.push([red + green + blue, i]);
+        //             }
+        //             firstResult.sort(function (a, b) { // 오름차순 
+        //         return a[0] - b[0];
+        //     });
+        //     var colorNum = firstResult[0][1];
+        //     var colorThumbnail = "rgb("+red+","+green+","+blue+")"
+        //     document.getElementById("failColor").style.backgroundColor = colorThumbnail;
+        //     document.getElementById("failColor").style.display = "inline-block";
+        //     document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
+        //         if(colorNum<16){
+        //             moveRight("");
+        //             document.getElementById("btnGroup").style.display = "none";
+        //             uploadCheck = true;
+        //             firstResult = [];
+        //             return;
+        //         }else if(colorNum==16){
+        //             alert("사진이 너무 빨갛습니다.")
+        //         }else if(colorNum==17){
+        //             alert("사진이 너무 초록색입니다.")
+        //         }else if(colorNum==18){
+        //             alert("사진이 너무 하늘색입니다.")
+        //         }else if(colorNum==19){
+        //             alert("사진이 너무 파란색입니다.")
+        //         }else if(colorNum==20){
+        //             alert("사진이 너무 보라색입니다.")
+        //         }else if(colorNum==21){
+        //             alert("사진이 너무 하얀색입니다.")
+        //         }else{
+        //             alert("사진이 너무 검정색입니다.")
+        //         }
+        //         firstResult = [];
 
-                }, error: function () {
-                    alert("실패")
-                }
-            })
+        //         }, error: function () {
+        //             alert("실패")
+        //         }
+        //     })
 
-        }
+        // }
         function season(colorGroup) {
             for (var i = 0; i < colorGroup.length; i++) {
                 var color = "color" + i;
