@@ -103,7 +103,7 @@ p{
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   background-image: url(mainBg.png);  
   background-size: contain;
 }
@@ -432,15 +432,15 @@ color: rgb(10, 59, 112);
 
 @media(max-width: 767px){
   #slider ul li{
-    width : 400px;
+    width : 320px;
     height: 400px;
   }
   .file-upload{
-    width: 400px;
+    width: 320px;
   }
   #slider ul{
-    width : 3200px !important;
-    margin-left : -400px !important;
+    width : 2560px !important;
+    margin-left : -320px !important;
   }
   html{
     font-size : 10px !important;
