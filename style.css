@@ -261,9 +261,9 @@ body {
   text-align: center;
 }
 .drag-text img{
-  width: 8rem;
-  height: 6rem;
-  margin-top: 2rem;
+  width: 6rem;
+  height: 4.5rem;
+  margin-top: 3rem;
 }
 .drag-text h3 {
   font-weight: 100;
