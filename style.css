@@ -19,6 +19,15 @@ p{
   html{
     font-size : 14px;
   }
+  .image-upload-wrap {
+    border: 4px solid cornflowerblue;
+    position: relative;
+    width: 200px !important;
+    height: 200px !important;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+}
 }
 #notice{
   background-color: #ffffff;
@@ -229,9 +238,9 @@ body {
 .image-upload-wrap {
     border: 4px solid cornflowerblue;
     position: relative;
-    border-radius: 100px;
-    width: 200px;
-    height: 200px;
+    border-radius: 200px;
+    width: 250px;
+    height: 250px;
     left: 50%;
     transform: translateX(-50%);
     background: white;
@@ -252,9 +261,9 @@ body {
   text-align: center;
 }
 .drag-text img{
-  width: 100px;
-  height: 80px;
-  margin-top: 20px;
+  width: 8rem;
+  height: 6rem;
+  margin-top: 2rem;
 }
 .drag-text h3 {
   font-weight: 100;
