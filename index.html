@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
 </head>
 
 <body>
@@ -19,8 +20,10 @@
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="Jcrop.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
     <script type="text/javascript" src="load-image.all.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+
     <div class="header">
         <h1>메뉴</h1>
     </div>
@@ -39,17 +42,16 @@
                     onchange="readURL(this);" accept="image/*" />
                 <div class="drag-text">
                     <img src="camera.png" />
-                    <h3>내 피부 촬영 Or 업로드 </h3>
+                    <h1>내 피부 촬영하기 </h1>
                 </div>
             </div>
             <div id="slider" style="display: none;">
 
-                <a class="control_next">다음</a>
-                <a class="control_prev"></a>
+                <a class="control_prev">뒤로</a>
                 <ul>
                     <li>
                         <div class="file-upload-content">
-                            <img class="file-upload-image" id="realImage" src="#" width="400px" height="400px"
+                            <img class="file-upload-image" id="realImage" src="#"
                                 alt="your image" />
                             <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
                                 class="remove-image">새로운 파일로 재시도</button>
@@ -142,141 +144,14 @@
 
     <div id="disqus_thread"></div>
     <script type="text/javascript">
-
-
-
-        var slideCount = $('#slider ul li').length;
-        var slideWidth = $('#slider ul li').width();
-        var slideHeight = $('#slider ul li').height();
-        var sliderUlWidth = slideCount * slideWidth;
-
-
-        $('#slider ul').css({ width: sliderUlWidth, marginLeft: - slideWidth });
-
-        $('#slider ul li:last-child').prependTo('#slider ul');
-
-
-
-        function moveLeft() {
-            slideCheck--;
-            answerStack.pop();
-            var slideWidth = $('#slider ul li').width();
-            $('#slider ul').animate({
-
-                left: + slideWidth
-            }, 400, function () {
-                $('#slider ul li:last-child').prependTo('#slider ul');
-                $('#slider ul').css('left', '');
-            });
-
-        };
-        function color() {
-            var colorThief = new ColorThief();
-
-            var sourceImage = document.getElementById("realImage");
-            sourceImage.setAttribute('crossOrigin', '')
-
-            console.log(
-                colorThief.getColor(sourceImage)
-            );
-
-            // Display palette of colors
-            // e.g [[55,37,29],[213,193,136],[110,204,223]]
-            var imgRed = colorThief.getColor(sourceImage)[0];
-            var imgGreen = colorThief.getColor(sourceImage)[1];
-            var imgBlue = colorThief.getColor(sourceImage)[2];
-            for (var i = 0; i < colorList.length; i++) {
-                var color = "color" + i;
-                var red = (imgRed - colorList[i][0]);
-                red = red < 0 ? -(red) : red;
-                var green = (imgGreen - colorList[i][1]);
-                green = green < 0 ? -(green) : green;
-                var blue = (imgBlue - colorList[i][2]);
-                blue = blue < 0 ? -(blue) : blue;
-
-                firstResult.push([red + green + blue, i]);
-            }
-            firstResult.sort(function (a, b) { // 오름차순 
-                return a[0] - b[0];
-            });
-            var colorNum = firstResult[0][1];
-            var colorThumbnail = "rgb(" + red + "," + green + "," + blue + ")"
-            document.getElementById("failColor").style.backgroundColor = colorThumbnail;
-            document.getElementById("failColor").style.display = "inline-block";
-            document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
-            if (colorNum < 16) {
-                moveRight("");
-                document.getElementById("btnGroup").style.display = "none";
-                uploadCheck = true;
-                firstResult = [];
-                return;
-            } else if (colorNum == 16) {
-                alert("사진이 너무 빨갛습니다.")
-            } else if (colorNum == 17) {
-                alert("사진이 너무 초록색입니다.")
-            } else if (colorNum == 18) {
-                alert("사진이 너무 하늘색입니다.")
-            } else if (colorNum == 19) {
-                alert("사진이 너무 파란색입니다.")
-            } else if (colorNum == 20) {
-                alert("사진이 너무 보라색입니다.")
-            } else if (colorNum == 21) {
-                alert("사진이 너무 하얀색입니다.")
-            } else {
-                alert("사진이 너무 검정색입니다.")
-            }
-            firstResult = [];
-
-            // Display main color
-            // e.g [125, 189, 193]
-        }
-
-        function moveRight(tone) {
-            slideCheck++;
-            if (tone == "worm") {
-                answerStack.push("worm");
-            } else if (tone == "cool") {
-                answerStack.push("cool");
-            }
-            if (slideCheck == 8) {
-                var worm = 0;
-                var cool = 0;
-                for (var i = 0; i < answerStack.length; i++) {
-                    if (answerStack[i] == "worm") {
-                        worm++;
-                    } else {
-                        cool++;
-                    }
-                }
-                if (worm < cool) {
-                    toneColor = "cool";
-                    season(coolColor);
-                    return
-                } else {
-                    toneColor = "worm";
-                    season(wormColor);
-                    return
-                }
-
-
-            }
-
-            var slideWidth = $('#slider ul li').width();
-            $('#slider ul').animate({
-                left: - slideWidth
-            }, 400, function () {
-                $('#slider ul li:first-child').appendTo('#slider ul');
-                $('#slider ul').css('left', '');
-            });
-
-        };
-
-        $('a.control_prev').click(function () {
-            moveLeft();
-        });
-
-        $('a.control_next').click(function () {
-            moveRight("aa");
+        //폰트가 로드되기전까지 투명도를 줘서 안보이게 했다가 3초이내에 로딩되면 보이게함.
+        //3초가 지나면 기본폰트로
+        setTimeout(function () {
+            document.body.style.opacity = 1
+        }, 3000)
+        var font = new FontFaceObserver('HSThin');
+        font.load(null, 3000).then(function () {
+            document.documentElement.classList.add('fonts-loaded');
         });
 
         var uploadCheck = false;
@@ -349,6 +224,178 @@
         var w;
         var h;
         let jcropApi = null;
+        var resizeCheck = false;
+
+        var slideCount = $('#slider ul li').length;
+        var slideWidth = $('#slider ul li').width();
+        var slideHeight = $('#slider ul li').height();
+        var sliderUlWidth = slideCount * slideWidth;
+
+
+        $('#slider ul').css({ width: sliderUlWidth, marginLeft: - slideWidth });
+
+        $('#slider ul li:last-child').prependTo('#slider ul');
+
+        
+        //리사이징이벤트
+        window.addEventListener("resize",function(){
+            if(window.innerWidth<768&&resizeCheck==false){
+                resizeCheck = true;
+                if (jcropApi) {
+                jcropApi.destroy();
+                jcropApi = null;
+                resize();
+            }
+        }
+            else if((window.innerWidth<1024&&window.innerWidth>767)&&resizeCheck==true){
+                resizeCheck = false;
+                if (jcropApi) {
+                jcropApi.destroy();
+                jcropApi = null;
+                resize();
+            }
+            }else if(window.innerWidth>1023&&resizeCheck==false){
+                resizeCheck = true;
+                if (jcropApi) {
+                jcropApi.destroy();
+                jcropApi = null;
+                resize();
+            }
+        }
+                
+        });
+
+
+        function moveLeft() {
+            slideCheck--;
+            if(slideCheck==0){
+                document.getElementsByClassName("control_prev")[0].style.display = "none"
+            }
+            answerStack.pop();
+            var slideWidth = $('#slider ul li').width();
+            $('#slider ul').animate({
+
+                left: + slideWidth
+            }, 400, function () {
+                $('#slider ul li:last-child').prependTo('#slider ul');
+                $('#slider ul').css('left', '');
+            });
+
+        };
+        function moveRight(tone) {
+            slideCheck++;
+            if(slideCheck>0){
+                document.getElementsByClassName("control_prev")[0].style.display = "block"
+            }
+            if (tone == "worm") {
+                answerStack.push("worm");
+            } else if (tone == "cool") {
+                answerStack.push("cool");
+            }
+            if (slideCheck == 8) {
+                var worm = 0;
+                var cool = 0;
+                for (var i = 0; i < answerStack.length; i++) {
+                    if (answerStack[i] == "worm") {
+                        worm++;
+                    } else {
+                        cool++;
+                    }
+                }
+                if (worm < cool) {
+                    toneColor = "cool";
+                    season(coolColor);
+                    return
+                } else {
+                    toneColor = "worm";
+                    season(wormColor);
+                    return
+                }
+
+
+            }
+
+            var slideWidth = $('#slider ul li').width();
+            $('#slider ul').animate({
+                left: - slideWidth
+            }, 400, function () {
+                $('#slider ul li:first-child').appendTo('#slider ul');
+                $('#slider ul').css('left', '');
+            });
+
+        };
+        function color() {
+            var colorThief = new ColorThief();
+
+            var sourceImage = document.getElementById("realImage");
+            sourceImage.setAttribute('crossOrigin', '')
+
+            console.log(
+                colorThief.getColor(sourceImage)
+            );
+
+            // Display palette of colors
+            // e.g [[55,37,29],[213,193,136],[110,204,223]]
+            var imgRed = colorThief.getColor(sourceImage)[0];
+            var imgGreen = colorThief.getColor(sourceImage)[1];
+            var imgBlue = colorThief.getColor(sourceImage)[2];
+            for (var i = 0; i < colorList.length; i++) {
+                var color = "color" + i;
+                var red = (imgRed - colorList[i][0]);
+                red = red < 0 ? -(red) : red;
+                var green = (imgGreen - colorList[i][1]);
+                green = green < 0 ? -(green) : green;
+                var blue = (imgBlue - colorList[i][2]);
+                blue = blue < 0 ? -(blue) : blue;
+
+                firstResult.push([red + green + blue, i]);
+            }
+            firstResult.sort(function (a, b) { // 오름차순 
+                return a[0] - b[0];
+            });
+            var colorNum = firstResult[0][1];
+            var colorThumbnail = "rgb(" + red + "," + green + "," + blue + ")"
+            document.getElementById("failColor").style.backgroundColor = colorThumbnail;
+            document.getElementById("failColor").style.display = "inline-block";
+            document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
+            if (colorNum < 16) {
+                moveRight("");
+                document.getElementById("btnGroup").style.display = "none";
+                uploadCheck = true;
+                firstResult = [];
+                return;
+            } else if (colorNum == 16) {
+                alert("사진이 너무 빨갛습니다.")
+            } else if (colorNum == 17) {
+                alert("사진이 너무 초록색입니다.")
+            } else if (colorNum == 18) {
+                alert("사진이 너무 하늘색입니다.")
+            } else if (colorNum == 19) {
+                alert("사진이 너무 파란색입니다.")
+            } else if (colorNum == 20) {
+                alert("사진이 너무 보라색입니다.")
+            } else if (colorNum == 21) {
+                alert("사진이 너무 하얀색입니다.")
+            } else {
+                alert("사진이 너무 검정색입니다.")
+            }
+            firstResult = [];
+
+            // Display main color
+            // e.g [125, 189, 193]
+        }
+
+        
+
+        $('a.control_prev').click(function () {
+            moveLeft();
+        });
+
+        $('a.control_next').click(function () {
+            moveRight("aa");
+        });
+
+       
 
 
         function next() {
@@ -379,8 +426,9 @@
 
             var imgWidth = document.getElementById("copyCanvas").width;
             var imgHeight = document.getElementById("copyCanvas").height;
-            var xRate = imgWidth / 400;
-            var yRate = imgHeight / 400;
+            //캔버스와 비율을 맞추기 위해 메인 이미지의 크기로 나눈다. jcrop이 원본이미지 크기를 줄이기때문에, jcrop의 자식의 크기를 가져온다
+            var xRate = imgWidth / document.getElementById("jcropImg").width;
+            var yRate = imgHeight / document.getElementById("jcropImg").height;
             canvas.width = w * xRate;
 
             canvas.height = h * yRate;
@@ -450,13 +498,22 @@
             //     canvasContext2.drawImage(image, 0, 0, 200, 200);
             // }
             $(".file-upload-image").attr("src", getBase64Image());
+            function div(){
+                document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className = "dragBar";
+                document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
+                document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
+
+            }
             document.getElementById("realImage").style.transform = "none";
             rotateRate = 0;
             $("#realImage").Jcrop({
                 onSelect: showCoords,
             }, function () {
                 jcropApi = this;
+                div();
             });
+
+            
 
 
 
@@ -515,9 +572,22 @@
         // }  블롭을 통해 자동으로 로테이트하는 함수, 그러나 지원하지 않는 브라우저가 많아서 포기.
 
 
+        //브라우저 리사이징시 크롭 새롭게 불러와서 크기 맞게 적용.
+        function resize(){
+            $("#realImage").Jcrop({
+                        onSelect: showCoords,
+                    }, function () {
+                        jcropApi = this;
+                    });
+                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className = "dragBar";
+                    document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
+                    document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
+                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( " + rotateRate + "deg )";
+                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
+        }
         function editImg() {
             document.getElementById("btnGroup").style.display = "inline-block";
-            document.getElementById("editBtn").disabled = true;
+            document.getElementById("editBtn").style.display = "none";
             let canvas = document.getElementById("copyCanvas");
 
             let canvasContext = canvas.getContext("2d");
@@ -626,8 +696,9 @@
                     }, function () {
                         jcropApi = this;
                     });
-                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className="dragBar";
+                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className = "dragBar";
                     document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
+                    document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
                     // 사진편집을 누르면 편집 테두리가 전체를 감싸도록 설정
                     $('.file-upload-content').show();
                 }
@@ -918,6 +989,7 @@
             document.getElementById("originalImg").style.transform = "none";
             var image = new Image();
             image.src = document.getElementById("originalImg").src;
+            document.getElementById("realImage").src = image.src;
             document.getElementsByClassName("file-upload-image")[1].src = image.src;
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.src = image.src;
             document.getElementsByClassName("file-upload-image")[1].style.transform = "none";
