@@ -13,6 +13,7 @@
   url(font/HSThin.woff) format('woff'),
   url(font/HSThin.ttf) format('truetype'),
   url(font/HSThin.otf) format('opentype')
+  /* 파이썬의 pyftsubset을 통해 경량화함 */
 }
 html{
   font-size: 16px;
@@ -20,6 +21,7 @@ html{
 body{
   font-family: 'HSThin' !important;
   margin: 0;
+  font-weight: 600;
 
 }
 p{
@@ -30,7 +32,7 @@ p{
     font-size : 14px !important;
   }
   .image-upload-wrap {
-    border: 4px solid cornflowerblue;
+    border: 4px solid rgb(10, 59, 112);
     position: relative;
     width: 200px !important;
     height: 200px !important;
@@ -43,7 +45,7 @@ p{
   background-color: #ffffff;
   background-color: rgba( 255, 255, 255, 0.4 );
   font-size: 1.5rem;
-  color: royalblue;
+  color: rgb(10, 59, 112);
   margin-top: 2rem;
   margin-bottom : 2rem;
   padding-left : 2rem;
@@ -53,7 +55,7 @@ p{
 }
 #subTitle{
   color: white;
-  background-color: royalblue;
+  background-color: rgb(10, 59, 112);
   font-size: 1.2rem;
   margin-bottom: 2rem;
 }
@@ -68,9 +70,9 @@ p{
 #mainTitle{
   margin-top: 2rem;
   margin-bottom: 2rem;
-  border : 2px solid royalblue;
+  border : 4px solid rgb(10, 59, 112);
   background-color: #ffffff;
-  background-color: rgba( 255, 255, 255, 0.6);
+  background-color: rgba( 255, 255, 255, .8);
   border-radius: 25px;
   padding-left : 1rem;
   padding-right: 1rem;
@@ -79,8 +81,8 @@ p{
 }
 #mainTitle p {
   font-size: 1.2rem;
-  font-weight: 400;
   margin: 0;
+  color: rgb(10, 59, 112);
 }
 #wormSpan{
   background-color: rgba(255,233,196);
@@ -94,10 +96,11 @@ p{
   background-size: contain;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  -webkit-text-stroke-color: dodgerblue;
+  -webkit-text-stroke-color: rgb(10, 59, 112);
   -webkit-text-stroke-width: 1px ;
 }
 #noBgSpan{
+  color: rgb(10, 59, 112);
   font-size: 3.5rem;
 }
 .question{
@@ -246,7 +249,7 @@ body {
 }
 
 .image-upload-wrap {
-    border: 4px solid cornflowerblue;
+    border: 4px solid rgb(10, 59, 112);
     position: relative;
     border-radius: 200px;
     width: 250px;
@@ -278,7 +281,7 @@ body {
 .drag-text h3 {
   font-weight: 100;
   text-transform: uppercase;
-  color: #15824B;
+  color: rgb(10, 59, 112);
 }
 
 .file-upload-image {
