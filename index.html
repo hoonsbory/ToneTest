@@ -51,15 +51,18 @@
                 <ul>
                     <li>
                         <div class="file-upload-content">
-                            <img class="file-upload-image" id="realImage" src="#"
-                                alt="your image" />
+                            <img class="file-upload-image" id="realImage" src="#" alt="your image" />
                             <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
                                 class="remove-image">새로운 파일로 재시도</button>
-                                <div class="btnGroup" id="cropImage" onclick="crop()" disabled="true"><img src="crop.png"><span>자르기</span></div>
-                                <div class="btnGroup"  onclick="rotateImg('right')" disabled="true"><img src="rotate.png"><span>회전</span></div>
-                                <div class="btnGroup"  id="refreshImg" onclick="refresh()" disabled="true"><span style="padding-left: 0px">재설정</span></div>
-                                <!-- <button id="cropImage" onclick="crop()" disabled="true">자르기</button> -->
-                                <!-- <button type="button" id="leftBtn" onclick="rotateImg('left')">왼쪽으로 90도 회전</button> -->
+                            <div class="btnGroup" onclick="editImg()" disabled="true"><img
+                                    src="crop.png"><span>자르기</span></div>
+                            <div class="btnGroup" onclick="rotateImg('right')" disabled="true"><img
+                                    src="rotate.png"><span>회전</span></div>
+                            <div class="btnGroup" id="refreshImg" onclick="refresh()" disabled="true"><span
+                                    style="padding-left: 0px">재설정</span></div>
+                            <button id="cropImage" onclick="crop()">완료</button>
+                            <!-- <button id="cropImage" onclick="crop()" disabled="true">자르기</button> -->
+                            <!-- <button type="button" id="leftBtn" onclick="rotateImg('left')">왼쪽으로 90도 회전</button> -->
                             <button onclick="next()">다음>></button>
                             <div id="failColor" style="display : none; height: 25px; width: 25px; border-radius: 15px;">
                             </div><span style="display: none;">사진의 상당부분이 피부색이 아닙니다. 다시 업로드하세요 </span>
@@ -152,8 +155,11 @@
             document.documentElement.classList.add('fonts-loaded');
         });
 
+        //자르기버튼 비활성화를 위한 체크.
         var cropCheck = true;
 
+        //첫 크롭여부 확인 후 처음인 경우만 드래그 안내
+        var firstCrop = true;
 
         var uploadCheck = false;
         //업로드여부 체크해
@@ -238,39 +244,48 @@
 
         $('#slider ul li:last-child').prependTo('#slider ul');
 
-        
         //리사이징이벤트
-        window.addEventListener("resize",function(){
-            if(window.innerWidth<768&&resizeCheck!="mob"){
+        window.addEventListener("resize", function () {
+            if (window.innerWidth < 768 && resizeCheck != "mob") {
                 resizeCheck = "mob";
                 if (jcropApi) {
-                jcropApi.destroy();
-                jcropApi = null;
-                resize();
+                    jcropApi.destroy();
+                    jcropApi = null;
+                    resize();
+                }
             }
-        }
-            else if((window.innerWidth<1024&&window.innerWidth>767)&&resizeCheck!="tab"){
+            else if ((window.innerWidth < 1024 && window.innerWidth > 767) && resizeCheck != "tab") {
                 resizeCheck = "tab";
                 if (jcropApi) {
-                jcropApi.destroy();
-                jcropApi = null;
-                resize();
-            }
-            }else if(window.innerWidth>1023&&resizeCheck!="pc"){
+                    jcropApi.destroy();
+                    jcropApi = null;
+                    resize();
+                }
+            } else if (window.innerWidth > 1023 && resizeCheck != "pc") {
                 resizeCheck = "pc";
                 if (jcropApi) {
-                jcropApi.destroy();
-                jcropApi = null;
-                resize();
+                    jcropApi.destroy();
+                    jcropApi = null;
+                    resize();
+                }
             }
-        }
-                
+
         });
+        function div() {
+            document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
+            document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 0.6;
+            if(firstCrop==false){
 
+            document.getElementsByClassName("jcrop-holder")[0].className = "jcrop-holder aft";
+            document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 1;
+            }else{
+            firstCrop = false;
+            }
 
+        }
         function moveLeft() {
             slideCheck--;
-            if(slideCheck==0){
+            if (slideCheck == 0) {
                 document.getElementsByClassName("control_prev")[0].style.display = "none"
             }
             answerStack.pop();
@@ -286,7 +301,7 @@
         };
         function moveRight(tone) {
             slideCheck++;
-            if(slideCheck>0){
+            if (slideCheck > 0) {
                 document.getElementsByClassName("control_prev")[0].style.display = "block"
             }
             if (tone == "worm") {
@@ -386,7 +401,7 @@
             // e.g [125, 189, 193]
         }
 
-        
+
 
         $('a.control_prev').click(function () {
             moveLeft();
@@ -396,7 +411,7 @@
             moveRight("aa");
         });
 
-       
+
 
 
         function next() {
@@ -412,7 +427,7 @@
         }
 
         function crop() {
-            if(cropCheck){
+            if (cropCheck) {
                 return;
             }
             cropCheck = true;
@@ -502,12 +517,7 @@
             //     canvasContext2.drawImage(image, 0, 0, 200, 200);
             // }
             $(".file-upload-image").attr("src", getBase64Image());
-            function div(){
-                document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className = "dragBar";
-                document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
-                document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
 
-            }
             document.getElementById("realImage").style.transform = "none";
             rotateRate = 0;
             $("#realImage").Jcrop({
@@ -517,7 +527,7 @@
                 div();
             });
 
-            
+
 
 
 
@@ -577,17 +587,18 @@
 
 
         //브라우저 리사이징시 크롭 새롭게 불러와서 크기 맞게 적용.
-        function resize(){
+        function resize() {
             $("#realImage").Jcrop({
-                        onSelect: showCoords,
-                    }, function () {
-                        jcropApi = this;
-                    });
-                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className = "dragBar";
-                    document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
-                    document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
-                    document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( " + rotateRate + "deg )";
-                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
+                onSelect: showCoords,
+            }, function () {
+                jcropApi = this;
+                div2();
+            });
+            function div2() {
+                document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
+                document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( " + rotateRate + "deg )";
+                document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
+            }
         }
         function editImg() {
             let canvas = document.getElementById("copyCanvas");
@@ -620,7 +631,9 @@
                         switch (orientation) {
 
                             // @details 이미지 회전값이 0인경우 ( 정방향 )
-
+                            case undefined:
+                                canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
+                                break;
                             case 1:
 
 
@@ -679,31 +692,21 @@
                                 break;
                         }
 
-                        $("#realImage").Jcrop({
-                            onSelect: showCoords,
-                        }, function () {
-                            jcropApi = this;
-                        });
-
-                        // $('.file-upload-image').css("display", "none");
-                        // $('#realImage').attr('src', e.target.result);
-                        $('.file-upload-content').show();
                     })
                 } else {
                     canvasContext.drawImage(this, 0, 0, canvas.width, canvas.height);
 
-
-                    $("#realImage").Jcrop({
-                        onSelect: showCoords,
-                    }, function () {
-                        jcropApi = this;
-                    });
-                    document.getElementsByClassName("jcrop-holder")[0].firstElementChild.className = "dragBar";
-                    document.getElementsByClassName("dragBar")[0].firstChild.nextSibling.style.display = "block"
-                    document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
-                    // 사진편집을 누르면 편집 테두리가 전체를 감싸도록 설정
-                    $('.file-upload-content').show();
                 }
+                $("#realImage").Jcrop({
+                    onSelect: showCoords,
+                }, function () {
+                    jcropApi = this;
+                    div();
+                });
+
+                // 사진편집을 누르면 편집 테두리가 전체를 감싸도록 설정
+                $('.file-upload-content').show();
+                
             }
 
         }
@@ -718,6 +721,7 @@
 
                     jcropApi = null;
                 }
+                firstCrop = true;
                 const fileInfo = input.files[0];
                 var reader = new FileReader();
                 let tempImage = new Image();
@@ -737,7 +741,6 @@
                         // $('#realImage').attr('src', e.target.result);
                         $('#slider').show();
                         uploadCheck = false;
-                        editImg();
                     };
 
 
@@ -965,8 +968,13 @@
         });
 
 
+
         var showCoords = function (c) {
             cropCheck = false;
+            if(document.getElementsByClassName("jcrop-holder")[0]){
+                document.getElementsByClassName("jcrop-holder")[0].className = "jcrop-holder aft";
+            }
+            
             x = c.x;
             y = c.y;
             w = c.w;

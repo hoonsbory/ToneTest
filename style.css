@@ -45,16 +45,29 @@
 .fonts-loaded.blocking-time {
  opacity: 1;
 }
-.dragBar{
+/* .dragBar{
   display: block;
   width: 400px;
   height: 400px;
   position: absolute;
   left: 0;
   top: 0;
-}
+} */
 html{
   font-size: 17px;
+
+}
+.jcrop-holder:before{
+  content : "드래그해서 영역을 선택한 후 완료 버튼을 눌러주세요";
+  color: white;  
+  position: absolute;
+  top : 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+}
+.jcrop-holder.aft:before{
+  content: "";
 }
 body{
   opacity: 0;
@@ -373,7 +386,7 @@ color: rgb(10, 59, 112);
   transition: all .2s ease;
 }
 /* jquery.Jcrop.min.css v0.9.12 (build:20130126) */
-.jcrop-holder{margin:auto;direction:ltr;text-align:left; border : 5px solid rgb(10, 59, 112)}
+.jcrop-holder{margin:auto;direction:ltr;text-align:left; border : 5px solid rgb(10, 59, 112);}
 .jcrop-vline,.jcrop-hline{background:#FFF url(Jcrop.gif);font-size:0;position:absolute;}
 .jcrop-vline{height:100%;width:1px!important;}
 .jcrop-vline.right{right:0;}
@@ -413,14 +426,14 @@ color: rgb(10, 59, 112);
   .file-upload {
     width: 550px;
   }
-  .dragBar{
+  /* .dragBar{
     display: block;
     width: 450px ;
     height: 450px ;
     position: absolute;
     left: 0;
     top: 0;
-  }
+  } */
 }
 @media(min-width : 768px) and (max-width : 1024px){
   
@@ -440,14 +453,14 @@ color: rgb(10, 59, 112);
     width: 350px !important;
     height: 350px !important;
   }
-  .dragBar{
+  /* .dragBar{
     display: block;
     width: 350px ;
     height: 350px ;
     position: absolute;
     left: 0;
     top: 0;
-  }
+  } */
 }
 
 @media(max-width: 767px){
@@ -486,12 +499,12 @@ color: rgb(10, 59, 112);
     width: 300px !important;
     height: 300px !important;
   }
-  .dragBar{
+  /* .dragBar{
     display: block;
     width: 300px ;
     height: 300px ;
     position: absolute;
     left: 0;
     top: 0;
-  }
+  } */
 }
