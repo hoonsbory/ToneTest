@@ -23,7 +23,25 @@
 .blocking-time {
  opacity: 0;
 }
-
+.btnGroup{
+  border: 2px solid rgb(10, 59, 112);
+    display: inline;
+    border-radius: 7px;
+    padding: 5px;
+    padding-bottom: 0px;
+    background-color: white;
+    color : rgb(10, 59, 112);
+    cursor: pointer;
+}
+.btnGroup img{
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 5px;
+}
+.btnGroup span{
+  padding-left: 5px;
+}
 .fonts-loaded.blocking-time {
  opacity: 1;
 }
@@ -98,6 +116,9 @@ p{
   background-color: rgb(10, 59, 112);
   font-size: 1.2rem;
   margin-bottom: 5vh;
+  padding: 6px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 #mainbody{
   display: flex;
@@ -186,9 +207,8 @@ p{
   margin: 0;
   padding: 0;
   width: 550px;
-  height: 600px;
-  background: #ccc;
   text-align: center;
+  padding-bottom : 20px;
 }
 a.control_prev{
   display: none;
@@ -353,7 +373,7 @@ color: rgb(10, 59, 112);
   transition: all .2s ease;
 }
 /* jquery.Jcrop.min.css v0.9.12 (build:20130126) */
-.jcrop-holder{margin:auto;direction:ltr;text-align:left;}
+.jcrop-holder{margin:auto;direction:ltr;text-align:left; border : 5px solid rgb(10, 59, 112)}
 .jcrop-vline,.jcrop-hline{background:#FFF url(Jcrop.gif);font-size:0;position:absolute;}
 .jcrop-vline{height:100%;width:1px!important;}
 .jcrop-vline.right{right:0;}
@@ -434,6 +454,14 @@ color: rgb(10, 59, 112);
   #slider ul li{
     width : 320px;
     height: 400px;
+  }
+  .btnGroup{
+    padding : 11px;
+    padding-bottom: 0px;
+  }
+  .btnGroup span{
+    padding-left: 2px;
+    font-size: 2rem;
   }
   .file-upload{
     width: 320px;

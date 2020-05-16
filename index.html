@@ -34,7 +34,7 @@
             <p>나는 <span id="wormSpan">웜톤</span>일까? <span id="coolSpan">쿨톤</span>일까?</p>
             <span id="bgSpan">퍼스널컬러</span><span id="noBgSpan"> 진단</span>
         </div>
-        <div id="subTitle">톤잘알이 되어 훈남,훈녀 되자!</div>
+        <div id="subTitle">'톤.잘.알'이 되어 훈남,훈녀 되자!</div>
         <div class="file-upload">
 
             <div class="image-upload-wrap">
@@ -55,13 +55,11 @@
                                 alt="your image" />
                             <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
                                 class="remove-image">새로운 파일로 재시도</button>
-                            <div id="btnGroup" style="display: none;">
-                                <button type="button" id="refreshImg" onclick="refresh()" disabled="true">사진 복구</button>
-                                <button id="cropImage" onclick="crop()" disabled="true">자르기</button>
-                                <button type="button" id="leftBtn" onclick="rotateImg('left')">왼쪽으로 90도 회전</button>
-                                <button type="button" id="rightBtn" onclick="rotateImg('right')">오른쪽으로 90도 회전</button>
-                            </div>
-                            <button id="editBtn" style="display: none;" onclick="editImg()">사진편집</button>
+                                <div class="btnGroup" id="cropImage" onclick="crop()" disabled="true"><img src="crop.png"><span>자르기</span></div>
+                                <div class="btnGroup"  onclick="rotateImg('right')" disabled="true"><img src="rotate.png"><span>회전</span></div>
+                                <div class="btnGroup"  id="refreshImg" onclick="refresh()" disabled="true"><span style="padding-left: 0px">재설정</span></div>
+                                <!-- <button id="cropImage" onclick="crop()" disabled="true">자르기</button> -->
+                                <!-- <button type="button" id="leftBtn" onclick="rotateImg('left')">왼쪽으로 90도 회전</button> -->
                             <button onclick="next()">다음>></button>
                             <div id="failColor" style="display : none; height: 25px; width: 25px; border-radius: 15px;">
                             </div><span style="display: none;">사진의 상당부분이 피부색이 아닙니다. 다시 업로드하세요 </span>
@@ -154,9 +152,13 @@
             document.documentElement.classList.add('fonts-loaded');
         });
 
+        var cropCheck = true;
+
+
         var uploadCheck = false;
-        //슬라이드 위치체크
+        //업로드여부 체크해
         var slideCheck = 0;
+        //슬라이드 위치체크
 
         //회전율
         var rotateRate = 0;
@@ -224,7 +226,7 @@
         var w;
         var h;
         let jcropApi = null;
-        var resizeCheck = false;
+        var resizeCheck;
 
         var slideCount = $('#slider ul li').length;
         var slideWidth = $('#slider ul li').width();
@@ -239,23 +241,23 @@
         
         //리사이징이벤트
         window.addEventListener("resize",function(){
-            if(window.innerWidth<768&&resizeCheck==false){
-                resizeCheck = true;
+            if(window.innerWidth<768&&resizeCheck!="mob"){
+                resizeCheck = "mob";
                 if (jcropApi) {
                 jcropApi.destroy();
                 jcropApi = null;
                 resize();
             }
         }
-            else if((window.innerWidth<1024&&window.innerWidth>767)&&resizeCheck==true){
-                resizeCheck = false;
+            else if((window.innerWidth<1024&&window.innerWidth>767)&&resizeCheck!="tab"){
+                resizeCheck = "tab";
                 if (jcropApi) {
                 jcropApi.destroy();
                 jcropApi = null;
                 resize();
             }
-            }else if(window.innerWidth>1023&&resizeCheck==false){
-                resizeCheck = true;
+            }else if(window.innerWidth>1023&&resizeCheck!="pc"){
+                resizeCheck = "pc";
                 if (jcropApi) {
                 jcropApi.destroy();
                 jcropApi = null;
@@ -360,7 +362,6 @@
             document.getElementById("failColor").nextElementSibling.style.display = "inline-block"
             if (colorNum < 16) {
                 moveRight("");
-                document.getElementById("btnGroup").style.display = "none";
                 uploadCheck = true;
                 firstResult = [];
                 return;
@@ -411,8 +412,11 @@
         }
 
         function crop() {
+            if(cropCheck){
+                return;
+            }
+            cropCheck = true;
             uploadCheck = false;
-            document.getElementById("cropImage").disabled = true;
             document.getElementById("refreshImg").disabled = false;
             //로드된 이미지를 캔버스에 출력
             //복사용 캔버스에 복사함. 하나의 캔버스에서 자기 자신을 불러와 크롭해서 리드로우가 불가능하기 때문.
@@ -434,7 +438,7 @@
             canvas.height = h * yRate;
             if (canvas.width == 0 || canvas.height == 0) {
                 alert("더 이상 확대할 수 없습니다.")
-                document.getElementById("cropImage").disabled = false;
+                cropCheck = false;
                 return;
             }
             canvasContext.drawImage(
@@ -586,8 +590,6 @@
                     document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
         }
         function editImg() {
-            document.getElementById("btnGroup").style.display = "inline-block";
-            document.getElementById("editBtn").style.display = "none";
             let canvas = document.getElementById("copyCanvas");
 
             let canvasContext = canvas.getContext("2d");
@@ -708,8 +710,8 @@
 
         function readURL(input) {
             if (input.files && input.files[0]) {
-
-                document.getElementById("editBtn").style.display = "inline";
+                document.getElementById("subTitle").style.fontSize = "1.7rem"
+                document.getElementById("subTitle").innerHTML = "피부 사진 편집";
 
                 if (jcropApi) {
                     jcropApi.destroy();
@@ -735,7 +737,7 @@
                         // $('#realImage').attr('src', e.target.result);
                         $('#slider').show();
                         uploadCheck = false;
-
+                        editImg();
                     };
 
 
@@ -964,7 +966,7 @@
 
 
         var showCoords = function (c) {
-            document.getElementById("cropImage").disabled = false;
+            cropCheck = false;
             x = c.x;
             y = c.y;
             w = c.w;
@@ -984,7 +986,7 @@
 
         function refresh() {
             uploadCheck = false;
-            document.getElementById("cropImage").disabled = true;
+            cropCheck = true;
             document.getElementById("refreshImg").disabled = true;
             document.getElementById("originalImg").style.transform = "none";
             var image = new Image();
