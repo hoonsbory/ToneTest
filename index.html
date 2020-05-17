@@ -162,6 +162,10 @@
             document.documentElement.classList.add('fonts-loaded');
         });
 
+        //크롭없이 회전후 크롭할 경우
+        var rotateCrop = false;
+        var editCheck = false;
+
         //자르기버튼 비활성화를 위한 체크.
         var cropCheck = true;
 
@@ -180,6 +184,7 @@
         //비교 후 결과값을 담을 변수
         var calResult = [];
         var toneColor;
+        
         //맨처음 색상분석을 위한 색상리스트
         var colorList = [
             [255, 233, 196],
@@ -611,8 +616,20 @@
                 document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
             }
         }
-        function editImg() {
+        async function editImg(callback,plusMinus) {
+            editCheck = true;
+            if(plusMinus){
+
+            }else{
             document.getElementById('editBtn').style.pointerEvents = 'none';
+            if(rotateCrop){
+                document.getElementsByClassName("jcrop-holder aft")[0].className = "jcrop-holder";
+                document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
+                document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 0.6;
+                rotateCrop = false;
+                return;
+            }
+            }
             document.getElementById("editBtn").style.animation = "fade 0.5s"
             setTimeout(() => {
                 document.getElementById("editBtn").style.animation = "unset"
@@ -722,7 +739,8 @@
 
                 // 사진편집을 누르면 편집 테두리가 전체를 감싸도록 설정
                 $('.file-upload-content').show();
-
+                callback(plusMinus);
+                // firstCrop = true;
             }
 
         }
@@ -743,7 +761,7 @@
                 document.getElementById("stepInfo").style.display = "block";
                 document.getElementById("cropNotice").style.display = "block";
                 document.getElementById('editBtn').style.pointerEvents = 'auto';
-
+                editCheck = false;
                 if (jcropApi) {
                     jcropApi.destroy();
 
@@ -930,7 +948,7 @@
         }
 
 
-        function rotateImg(plusMinus) {
+         function rotateImg(plusMinus) {
             document.getElementById("rotateBtn").style.animation = "fade 0.5s"
             setTimeout(() => {
                 document.getElementById("rotateBtn").style.animation = "unset"
@@ -945,6 +963,18 @@
                 rotateRate = 0;
             }
 
+            if(!editCheck){
+                firstCrop = false;
+                rotateCrop = true;
+                 editImg(rotateCall,plusMinus);
+             
+            }else{
+                rotateCall(plusMinus);
+            }
+            
+
+        }
+        function rotateCall(plusMinus){
             let canvas = document.getElementById("copyCanvas");
 
             let canvasContext = canvas.getContext("2d");
@@ -953,8 +983,11 @@
             let rtx = rotateCanvas.getContext("2d");
             document.getElementById("realImage").style.transform = "rotate( " + rotateRate + "deg )";
             document.getElementById("originalImg").style.transform = "rotate( " + rotateRate + "deg )";
+            if(document.getElementsByClassName("jcrop-holder")[0]){
             document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( " + rotateRate + "deg )";
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
+
+            }
             rotateCanvas.width = canvas.width;
             rotateCanvas.height = canvas.height;
 
@@ -983,9 +1016,7 @@
             canvas.height = rotateCanvas.height;
 
             canvasContext.drawImage(rotateCanvas, 0, 0, rotateCanvas.width, rotateCanvas.height);
-
         }
-
         function removeUpload() {
             $('.file-upload-input').replaceWith($('.file-upload-input').clone());
             $('.file-upload-content').hide();
