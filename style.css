@@ -19,12 +19,79 @@
   font-family: 'HSThin';
   opacity: 1;
 }
-
+#realImage{
+  border : 5px solid rgb(10, 59, 112);
+}
 .blocking-time {
  opacity: 0;
 }
+@keyframes fade{
+  from{
+    background-color: darkgray;
+  }
+  to{
+    background-color: white;
+  }
+}
+#cropNotice{
+  display: none;
+  margin-bottom: 1vh;
+  background: rgb(250,50,34);
+  padding: 4px;
+  font-size: 1.4rem;
+  color: white;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+#stepInfo{
+    display: none;
+    background-color: rgb(74, 114, 176);
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    font-size: 2.3rem;
+    color: white;
+    padding-right: 1.8rem;
+    padding-top: 0.4rem;
+    padding-left: 0.3rem;
+    padding-bottom: 0.3rem;
+    margin-top: 7vh;
+    margin-bottom: 3vh;
+}
+#stepNum{
+  background-color: white;
+    color: rgb(74, 114, 176);
+    padding-top: 0.8rem;
+    padding-bottom: 0;
+    padding-right: 1.4rem;
+    padding-left: 0.5rem;
+    margin-right: 1rem;
+}
+#askFooter{
+  background: white;
+  display: inline-block;
+  width: 100%;
+  padding-top: .5rem
+}
+.arrowBtn{
+  color: white;
+  position: relative;
+  left: 3rem;
+  
+}
+.arrowBtn img{
+  width: 9rem;
+  height: 4rem;
+  cursor: pointer;
+}
+.arrowBtn span{
+    position: relative;
+    bottom: 1.7rem;
+    left: -8rem;
+    cursor: pointer;
+}
+
 .btnGroup{
-  border: 2px solid rgb(10, 59, 112);
+    border: 2px solid rgb(10, 59, 112);
     display: inline;
     border-radius: 7px;
     padding: 5px;
@@ -32,6 +99,22 @@
     background-color: white;
     color : rgb(10, 59, 112);
     cursor: pointer;
+    
+}
+#newfile{
+  width: 300px;
+  padding: 0;
+  display: block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 15px;
+  margin-bottom: .6rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.3rem;
+}
+#leftBtn span{
+  left : -6rem;
 }
 .btnGroup img{
   width: 20px;
@@ -64,7 +147,9 @@ html{
   top : 50%;
   left: 50%;
   transform: translateX(-50%);
+  width: 15rem;
   font-size: 1.2rem;
+  z-index: 100;
 }
 .jcrop-holder.aft:before{
   content: "";
@@ -178,25 +263,29 @@ p{
   font-size: 3.5rem;
 }
 .question{
-  border-bottom: 1px solid black;
+  background-color: white;
+  color: rgb(10, 59, 112);
+  padding: 1rem;
+  font-size: 1.3rem;
 }
 .choose{
     width: 100%;
     padding: 0;
     margin: 0;
     height: 100%;
+    font-size: 1.7rem;
+}
+.choose span{
+  position: relative;
+  top: 50%;
 }
 .leftChoose{
     width: 50%;
     float: left;
-    height: 100%;
-    background: pink;
 }
 .rightChoose{
   width: 50%;
   float: left;
-  height: 100%;
-  background: yellow;
 }
 #slider {
   position: relative;
@@ -330,6 +419,7 @@ width: 6rem;
 height: 4.5rem;
 margin-top: 4rem;
 }
+
 .drag-text h1 {
 font-weight: 100;
 text-transform: uppercase;
@@ -337,8 +427,7 @@ color: rgb(10, 59, 112);
 }
 .image-dropping,
 .image-upload-wrap:hover {
-  background-color: #1FB264;
-  border: 4px dashed #ffffff;
+  background-color: darkgray;
 }
 
 .image-title-wrap {
@@ -355,36 +444,7 @@ color: rgb(10, 59, 112);
   margin: auto;
 }
 
-.remove-image {
-  width: 200px;
-  margin: 0;
-  color: #fff;
-  background: #cd4535;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  border-bottom: 4px solid #b02818;
-  transition: all .2s ease;
-  outline: none;
-  text-transform: uppercase;
-  font-weight: 700;
-  display: block;
-  left : 50%;
-  position: relative;
-  transform: translateX(-50%);
-}
 
-.remove-image:hover {
-  background: #c13b2a;
-  color: #ffffff;
-  transition: all .2s ease;
-  cursor: pointer;
-}
-
-.remove-image:active {
-  border: 0;
-  transition: all .2s ease;
-}
 /* jquery.Jcrop.min.css v0.9.12 (build:20130126) */
 .jcrop-holder{margin:auto;direction:ltr;text-align:left; border : 5px solid rgb(10, 59, 112);}
 .jcrop-vline,.jcrop-hline{background:#FFF url(Jcrop.gif);font-size:0;position:absolute;}
@@ -416,7 +476,7 @@ color: rgb(10, 59, 112);
 .jcrop-holder img,img.jcrop-preview{max-width:none;}
 @media(min-width: 1025px){
   #slider ul{
-    width : 4400px !important;
+    width : 3300px !important;
     margin-left : -550px !important;
   }
   #realImage{
@@ -426,6 +486,16 @@ color: rgb(10, 59, 112);
   .file-upload {
     width: 550px;
   }
+  .leftChoose,.rightChoose{
+    height: 450px;
+  }
+  .middleBar{
+        border-left: 3px solid white;
+        position: absolute;
+        height: 450px;
+        left: 50%;
+  }
+  
   /* .dragBar{
     display: block;
     width: 450px ;
@@ -439,16 +509,23 @@ color: rgb(10, 59, 112);
   
   #slider ul li{
     width : 450px;
-    height: 450px;
   }
   .file-upload{
     width: 450px;
   }
   #slider ul{
-    width : 3600px !important;
+    width : 2700px !important;
     margin-left : -450px !important;
   }
-
+  .leftChoose,.rightChoose{
+    height: 350px;
+  }
+  .middleBar{
+    border-left: 3px solid white;
+    position: absolute;
+    height: 350px;
+    left: 50%;
+}
   #realImage{
     width: 350px !important;
     height: 350px !important;
@@ -466,21 +543,26 @@ color: rgb(10, 59, 112);
 @media(max-width: 767px){
   #slider ul li{
     width : 320px;
-    height: 400px;
   }
   .btnGroup{
-    padding : 11px;
+    padding : 1.5vh;
     padding-bottom: 0px;
   }
   .btnGroup span{
-    padding-left: 2px;
-    font-size: 2rem;
+    padding-left: .6vh;
+    font-size: 1.2rem;
+  }
+  .btnGroup img{
+    width: 3vh;
+    height: 3vh;
+    position: relative;
+    top: 5px;
   }
   .file-upload{
     width: 320px;
   }
   #slider ul{
-    width : 2560px !important;
+    width : 1920px !important;
     margin-left : -320px !important;
   }
   html{
@@ -495,6 +577,15 @@ color: rgb(10, 59, 112);
     transform: translateX(-50%);
     background: white;
 }
+.leftChoose,.rightChoose{
+  height: 300px;
+}
+.middleBar{
+  border-left: 3px solid white;
+  position: absolute;
+  height: 300px;
+  left: 50%;
+}
   #realImage{
     width: 300px !important;
     height: 300px !important;
@@ -507,4 +598,60 @@ color: rgb(10, 59, 112);
     left: 0;
     top: 0;
   } */
+  .arrowBtn{
+    color: white;
+    display: inline;
+    position: relative;
+    left: 3rem;
+    font-size: 1rem;
+}
+.arrowBtn img{
+    width: 9rem;
+    height: 5rem;
+}
+.arrowBtn span{
+    position: relative;
+    bottom: 2.1rem;
+    left: -8rem;
+}
+#leftBtn span{
+  left : -6rem;
+}
+
+#stepInfo {
+  display: none;
+  background-color: rgb(74, 114, 176);
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  font-size: 3vh;
+  color: white;
+  padding-right: 1.8rem;
+  padding-top: 0.4rem;
+  padding-left: 0.3rem;
+  padding-bottom: 0.3rem;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+#cropNotice {
+  display: none;
+  margin-bottom: 1vh;
+  background: rgb(250,50,34);
+  padding: 4px;
+  font-size: 1.9vh;
+  color: white;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+#slider{
+  position: relative;
+    overflow: hidden;
+    margin: 10px auto 0 auto;
+    border-radius: 4px
+}
+#newfile{
+  margin-bottom: .6rem;
+}
+#mainbody{
+  height: 100vh;
+}
 }

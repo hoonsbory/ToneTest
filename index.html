@@ -13,8 +13,6 @@
     </canvas>
     <canvas id="copyCanvas" style="display: none;">
     </canvas>
-    <canvas id="rotateCanvas" style="display: none;">
-    </canvas>
     <p id="resultText"></p>
     <script src="color-thief.umd.js"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -25,7 +23,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 
     <div class="header">
-        <h1>메뉴</h1>
+        <h5 style="margin : 0">메뉴</h5>
     </div>
 
 
@@ -35,6 +33,8 @@
             <span id="bgSpan">퍼스널컬러</span><span id="noBgSpan"> 진단</span>
         </div>
         <div id="subTitle">'톤.잘.알'이 되어 훈남,훈녀 되자!</div>
+        <div id="stepInfo"><span id="stepNum">&nbsp;1</span><span id="subInfo">피부 사진 편집</span></div>
+        <div id="cropNotice">※사각형에 피부만 꽉차게 편집해주세요</div>
         <div class="file-upload">
 
             <div class="image-upload-wrap">
@@ -47,23 +47,26 @@
             </div>
             <div id="slider" style="display: none;">
 
-                <a class="control_prev">뒤로</a>
                 <ul>
                     <li>
                         <div class="file-upload-content">
                             <img class="file-upload-image" id="realImage" src="#" alt="your image" />
-                            <button type="button" onclick="$('.file-upload-input').trigger( 'click' )"
-                                class="remove-image">새로운 파일로 재시도</button>
-                            <div class="btnGroup" onclick="editImg()" disabled="true"><img
-                                    src="crop.png"><span>자르기</span></div>
-                            <div class="btnGroup" onclick="rotateImg('right')" disabled="true"><img
-                                    src="rotate.png"><span>회전</span></div>
-                            <div class="btnGroup" id="refreshImg" onclick="refresh()" disabled="true"><span
-                                    style="padding-left: 0px">재설정</span></div>
-                            <button id="cropImage" onclick="crop()">완료</button>
+                            <div style="margin-top : 2vh">
+                                <div class="btnGroup" id="editBtn" onclick="editImg()"><img
+                                        src="crop.png"><span>자르기</span></div>
+                                <div class="btnGroup" id="rotateBtn" onclick="rotateImg('right')"><img
+                                        src="rotate.png"><span>회전</span></div>
+                                <div class="btnGroup" id="refreshBtn" onclick="refresh()"><span
+                                        style="padding-left: 0px">재설정</span></div>
+                                <div class="btnGroup" onclick="crop()"><span style="padding-left: 0px">완료</span></div>
+                            </div>
+                            <div onclick="$('.file-upload-input').trigger( 'click' )" class="btnGroup" id="newfile">
+                                <span>새로운 사진으로
+                                    재시도</span></div>
                             <!-- <button id="cropImage" onclick="crop()" disabled="true">자르기</button> -->
                             <!-- <button type="button" id="leftBtn" onclick="rotateImg('left')">왼쪽으로 90도 회전</button> -->
-                            <button onclick="next()">다음>></button>
+                            <div class="arrowBtn"><img src="arrow.png" onclick="next()"><span  onclick="next()">다음 단계로</span></div>
+                            <!-- <button onclick="next()">다음>></button> -->
                             <div id="failColor" style="display : none; height: 25px; width: 25px; border-radius: 15px;">
                             </div><span style="display: none;">사진의 상당부분이 피부색이 아닙니다. 다시 업로드하세요 </span>
                             <img id="originalImg" style="display: none;" />
@@ -72,66 +75,67 @@
                     </li>
                     <li>
                         <div class="question">
-                            <p>1.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                            <p>1.나는 손목에 ○ ○색을 띄는 혈관이 많다</p>
                         </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div class="choose" style="color: rgb(10, 59, 112);">
+                            <div class="leftChoose" style="background-color: rgb(162,206,164);" onclick="moveRight('worm')"><span>초록색</span></div>
+                            <div class="middleBar"></div>
+                            <div class="rightChoose" style="background-color: rgb(153,198,228);" onclick="moveRight('cool')"><span>파란색</span></div>
                         </div>
-
-                    </li>
-                    <li>
-                        <div class="question">
-                            <p>2.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                        </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div id="askFooter">
+                            <div id="leftBtn" class="arrowBtn"><img src="arrowLeft.png" onclick="moveLeft()"><span onclick="moveLeft()">이전 단계로</span></div>
                         </div>
                     </li>
                     <li>
                         <div class="question">
-                            <p>3.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                            <p>2.나는 헤어컬러가 ○ ○에 가깝다</p>
                         </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div class="choose" style="color: white;">
+                            <div class="leftChoose" style="background-color: rgb(117,76,36);" onclick="moveRight('worm')"><span>브라운</span></div>
+                            <div class="middleBar"></div>
+                            <div class="rightChoose" style="background-color: black;" onclick="moveRight('cool')"><span>블랙</span></div>
                         </div>
-                    </li>
-                    <li>
-                        <div class="question">
-                            <p>4.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                        </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div id="askFooter">
+                            <div id="leftBtn" class="arrowBtn"><img src="arrowLeft.png" onclick="moveLeft()"><span onclick="moveLeft()">이전 단계로</span></div>
                         </div>
                     </li>
                     <li>
                         <div class="question">
-                            <p>5.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                            <p>3.나는 피부에 ○ ○ ○가 많다</p>
                         </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div class="choose" style="color: rgb(10, 59, 112);">
+                            <div class="leftChoose" style="background-color: rgb(253,215,153);" onclick="moveRight('worm')"><span>노란기</span></div>
+                            <div class="middleBar"></div>
+                            <div class="rightChoose" style="background-color: rgb(250,208,184);" onclick="moveRight('cool')"><span>붉은기</span></div>
                         </div>
-                    </li>
-                    <li>
-                        <div class="question">
-                            <p>6.당신은 어떤 옷 색깔이 잘받습니까?</p>
-                        </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div id="askFooter">
+                            <div id="leftBtn" class="arrowBtn"><img src="arrowLeft.png" onclick="moveLeft()"><span onclick="moveLeft()">이전 단계로</span></div>
                         </div>
                     </li>
                     <li>
                         <div class="question">
-                            <p>7.당신은 어떤 옷 색깔이 잘받습니까?</p>
+                            <p>4.나는 햇볕에 장시간 있으면</p>
                         </div>
-                        <div class="choose">
-                            <div class="leftChoose" onclick="moveRight('worm')">핑크색</div>
-                            <div class="rightChoose" onclick="moveRight('cool')">노란색</div>
+                        <div class="choose" style="color: white;">
+                            <div class="leftChoose" style="background-color: rgb(167,135,84);" onclick="moveRight('worm')"><span>쉽게 탄다</span></div>
+                            <div class="middleBar"></div>
+                            <div class="rightChoose" style="background-color: rgb(225,152,142);" onclick="moveRight('cool')"><span>빨갛게 익는다</span></div>
+                        </div>
+                        <div id="askFooter">
+                            <div id="leftBtn" class="arrowBtn"><img src="arrowLeft.png" onclick="moveLeft()"><span onclick="moveLeft()">이전 단계로</span></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="question">
+                            <p>5.나는 ○ ○색 티셔츠가 더 잘어울린다</p>
+                        </div>
+                        <div class="choose" style="color: rgb(10, 59, 112);">
+                            <div class="leftChoose" style="border-top: 4px solid rgb(253,245,226); border-bottom: 4px solid rgb(253,245,226); background-color: rgb(253,245,226);" onclick="moveRight('worm')"><span>아이보리 / 베이지</span></div>
+                            <div class="middleBar"></div>
+                            <div class="rightChoose" style="border-top: 4px solid rgb(253,245,226); border-bottom: 4px solid rgb(253,245,226); background-color: white;" onclick="moveRight('cool')"><span>순백색</span></div>
+                        </div>
+                        <div id="askFooter">
+                            <div id="leftBtn" class="arrowBtn"><img src="arrowLeft.png" onclick="moveLeft()"><span onclick="moveLeft()">이전 단계로</span></div>
                         </div>
                     </li>
                 </ul>
@@ -139,7 +143,10 @@
 
 
         </div>
-        <div id="notice">※퍼스널컬러 진단을 위해서 <p>&nbsp;&nbsp;피부 촬용이 필요합니다.</p>
+        <div id="notice">※퍼스널컬러 진단을 위해서 <p>&nbsp;&nbsp;<span
+                    style="background-color: rgb(250,50,34); color: white; padding : 4px; padding-bottom: 0px;">팔목
+                    안쪽</span> 피부 촬영이
+                필요합니다.</p>
         </div>
     </div>
 
@@ -274,19 +281,21 @@
         function div() {
             document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
             document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 0.6;
-            if(firstCrop==false){
+            if (firstCrop == false) {
 
-            document.getElementsByClassName("jcrop-holder")[0].className = "jcrop-holder aft";
-            document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 1;
-            }else{
-            firstCrop = false;
+                document.getElementsByClassName("jcrop-holder")[0].className = "jcrop-holder aft";
+                document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 1;
+            } else {
+                firstCrop = false;
             }
 
         }
         function moveLeft() {
             slideCheck--;
             if (slideCheck == 0) {
-                document.getElementsByClassName("control_prev")[0].style.display = "none"
+                document.getElementById("cropNotice").style.display = "block"
+                document.getElementById("stepNum").innerHTML = "\u00A01";
+                document.getElementById("subInfo").innerHTML = "피부\u00A0사진\u00A0편집"
             }
             answerStack.pop();
             var slideWidth = $('#slider ul li').width();
@@ -301,15 +310,17 @@
         };
         function moveRight(tone) {
             slideCheck++;
-            if (slideCheck > 0) {
-                document.getElementsByClassName("control_prev")[0].style.display = "block"
+            if(slideCheck>0){
+                document.getElementById("cropNotice").style.display = "none"
+                document.getElementById("stepNum").innerHTML = "\u00A02";
+                document.getElementById("subInfo").innerHTML = "질문\u00A05단계"
             }
             if (tone == "worm") {
                 answerStack.push("worm");
             } else if (tone == "cool") {
                 answerStack.push("cool");
             }
-            if (slideCheck == 8) {
+            if (slideCheck == 6) {
                 var worm = 0;
                 var cool = 0;
                 for (var i = 0; i < answerStack.length; i++) {
@@ -432,7 +443,7 @@
             }
             cropCheck = true;
             uploadCheck = false;
-            document.getElementById("refreshImg").disabled = false;
+            document.getElementById("refreshBtn").disabled = false;
             //로드된 이미지를 캔버스에 출력
             //복사용 캔버스에 복사함. 하나의 캔버스에서 자기 자신을 불러와 크롭해서 리드로우가 불가능하기 때문.
             let canvas = document.getElementById("myCanvas");
@@ -601,6 +612,11 @@
             }
         }
         function editImg() {
+            document.getElementById('editBtn').style.pointerEvents = 'none';
+            document.getElementById("editBtn").style.animation = "fade 0.5s"
+            setTimeout(() => {
+                document.getElementById("editBtn").style.animation = "unset"
+            }, 500);
             let canvas = document.getElementById("copyCanvas");
 
             let canvasContext = canvas.getContext("2d");
@@ -706,15 +722,27 @@
 
                 // 사진편집을 누르면 편집 테두리가 전체를 감싸도록 설정
                 $('.file-upload-content').show();
-                
+
             }
 
         }
 
         function readURL(input) {
             if (input.files && input.files[0]) {
-                document.getElementById("subTitle").style.fontSize = "1.7rem"
-                document.getElementById("subTitle").innerHTML = "피부 사진 편집";
+
+                if (navigator.userAgent.indexOf("Android") > 0 ||
+                    navigator.userAgent.indexOf("iPhone") > 0 ||
+                    navigator.userAgent.indexOf("iPod") > 0 ||
+                    navigator.userAgent.indexOf("BlackBerry") > 0) {
+                    document.getElementById("stepNum").style.paddingRight = "1.2rem";
+                    document.getElementById("stepNum").style.paddingTop = "0.3rem";
+                }
+                document.getElementById("subTitle").style.display = "none";
+                document.getElementById("mainTitle").style.display = "none";
+                document.getElementById("notice").style.display = "none";
+                document.getElementById("stepInfo").style.display = "block";
+                document.getElementById("cropNotice").style.display = "block";
+                document.getElementById('editBtn').style.pointerEvents = 'auto';
 
                 if (jcropApi) {
                     jcropApi.destroy();
@@ -903,6 +931,10 @@
 
 
         function rotateImg(plusMinus) {
+            document.getElementById("rotateBtn").style.animation = "fade 0.5s"
+            setTimeout(() => {
+                document.getElementById("rotateBtn").style.animation = "unset"
+            }, 500);
             if (plusMinus == "right") {
                 rotateRate += 90;
             } else {
@@ -917,13 +949,12 @@
 
             let canvasContext = canvas.getContext("2d");
 
-            let rotateCanvas = document.getElementById("rotateCanvas");
+            let rotateCanvas = document.getElementById("myCanvas");
             let rtx = rotateCanvas.getContext("2d");
             document.getElementById("realImage").style.transform = "rotate( " + rotateRate + "deg )";
             document.getElementById("originalImg").style.transform = "rotate( " + rotateRate + "deg )";
             document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( " + rotateRate + "deg )";
             document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
-
             rotateCanvas.width = canvas.width;
             rotateCanvas.height = canvas.height;
 
@@ -971,10 +1002,10 @@
 
         var showCoords = function (c) {
             cropCheck = false;
-            if(document.getElementsByClassName("jcrop-holder")[0]){
+            if (document.getElementsByClassName("jcrop-holder")[0]) {
                 document.getElementsByClassName("jcrop-holder")[0].className = "jcrop-holder aft";
             }
-            
+
             x = c.x;
             y = c.y;
             w = c.w;
@@ -993,9 +1024,13 @@
         }
 
         function refresh() {
+            document.getElementById("refreshBtn").style.animation = "fade 0.5s"
+            setTimeout(() => {
+                document.getElementById("refreshBtn").style.animation = "unset"
+            }, 500);
             uploadCheck = false;
             cropCheck = true;
-            document.getElementById("refreshImg").disabled = true;
+            document.getElementById("refreshBtn").disabled = true;
             document.getElementById("originalImg").style.transform = "none";
             var image = new Image();
             image.src = document.getElementById("originalImg").src;
