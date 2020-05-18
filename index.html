@@ -162,8 +162,11 @@
             document.documentElement.classList.add('fonts-loaded');
         });
 
-        //크롭없이 회전후 크롭할 경우
+        //크롭없이 회전후 크롭할 경우  크롭을 하는 것은, 원본이미지를 캔버스에 옮겨오는 것으로 시작하는데, 크롭버튼을 누르지않고 회전부터 할 경우, 나중에 크롭할때 회전도가 달라 문제가 생긴다.
+        //그래서 크롭을 시작하기전에 회전을 할 경우에만 한해서 캔버스에 그리고 시작한다. 사진을 올리자마자 캔버스에 그리는 게 편하지만, 편집을 원하지 않는 경우엔 불필요한 로딩을 하는 것이라 
+        //따로 크롭 버튼을 넣은 것이다.
         var rotateCrop = false;
+        //크롭버튼 클릭 유무. 크롭을 한적이 없다면 회전시 자동크롭
         var editCheck = false;
 
         //자르기버튼 비활성화를 위한 체크.
@@ -183,7 +186,6 @@
         var firstResult = [];
         //비교 후 결과값을 담을 변수
         var calResult = [];
-        var toneColor;
         
         //맨처음 색상분석을 위한 색상리스트
         var colorList = [
@@ -236,6 +238,8 @@
         var imgRed;
         var imgGreen;
         var imgBlue;
+        
+        //답변 갯수를 종합해줄 스택
         var answerStack = [];
 
         //크롭을 위한 좌표값
@@ -336,12 +340,10 @@
                     }
                 }
                 if (worm < cool) {
-                    toneColor = "cool";
-                    season(coolColor);
+                    season(coolColor,"cool");
                     return
                 } else {
-                    toneColor = "worm";
-                    season(wormColor);
+                    season(wormColor,"worm");
                     return
                 }
 
@@ -1219,7 +1221,7 @@
         //     })
 
         // }
-        function season(colorGroup) {
+        function season(colorGroup,toneColor) {
             for (var i = 0; i < colorGroup.length; i++) {
                 var color = "color" + i;
                 var red = (imgRed - colorGroup[i][0]); 
