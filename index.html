@@ -299,6 +299,8 @@
             }
 
         }
+
+        //뒤로가기
         function moveLeft() {
             slideCheck--;
             if (slideCheck == 0) {
@@ -317,6 +319,7 @@
             });
 
         };
+        //다음 단계로
         function moveRight(tone) {
             slideCheck++;
             if(slideCheck>0){
@@ -359,6 +362,8 @@
             });
 
         };
+
+        //이미지에서 색상추출
         function color() {
             var colorThief = new ColorThief();
 
@@ -431,7 +436,7 @@
 
 
 
-
+        //다음 버튼 눌렀을때 색상추출전이면 추출하고 아니면 다음단계로
         function next() {
             if (uploadCheck) {
                 moveRight("");
@@ -444,6 +449,8 @@
             $("#fileInput").val("");
         }
 
+
+        //자르기
         function crop() {
             if (cropCheck) {
                 return;
@@ -618,6 +625,7 @@
                 document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
             }
         }
+        //업로드된 이미지를 jcrop라이브러리로 변환하고 이미지를 캔버스에 그려놓는다.
         async function editImg(callback,plusMinus) {
             editCheck = true;
             if(plusMinus){
@@ -747,6 +755,7 @@
 
         }
 
+        //인풋창 파일 업로드 시 
         function readURL(input) {
             if (input.files && input.files[0]) {
 
@@ -950,6 +959,7 @@
         }
 
 
+        //이미지 회전.
          function rotateImg(plusMinus) {
             document.getElementById("rotateBtn").style.animation = "fade 0.5s"
             setTimeout(() => {
@@ -968,6 +978,7 @@
             if(!editCheck){
                 firstCrop = false;
                 rotateCrop = true;
+                //캔버스에 그림이 그려진 후 회전을 시켜야해서 콜백함수로 순서를 맞춤.
                  editImg(rotateCall,plusMinus);
              
             }else{
@@ -1033,6 +1044,7 @@
 
 
 
+        //크롭 영역 지정 이벤트 함수
         var showCoords = function (c) {
             cropCheck = false;
             if (document.getElementsByClassName("jcrop-holder")[0]) {
@@ -1056,6 +1068,8 @@
 
         }
 
+
+        //사진 원상복구. 숨겨놓앗던 오리지널 이미지태그를 불러와 캔버스에 다시그림
         function refresh() {
             document.getElementById("refreshBtn").style.animation = "fade 0.5s"
             setTimeout(() => {
@@ -1221,6 +1235,8 @@
         //     })
 
         // }
+
+        //색상과 질문 총 결과값을 종합하여 결과 도출
         function season(colorGroup,toneColor) {
             for (var i = 0; i < colorGroup.length; i++) {
                 var color = "color" + i;
