@@ -1,8 +1,12 @@
 language: java
+
 branches:
     only:
       - master
-cache: bundler      
+cache:
+  directories:
+    - '${HOME}/.cache/html'
+    
 # Travis CI 서버의 Home
 
 # before_install:
