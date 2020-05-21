@@ -14,14 +14,13 @@
     <canvas id="copyCanvas" style="display: none;">
     </canvas>
     <p id="resultText"></p>
+    <p id="resultText"></p>
     <script src="color-thief.umd.js"></script>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="Jcrop.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.js"></script>
-    <script type="text/javascript" src="load-image.all.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-
     <div class="header">
         <h5 style="margin : 0">메뉴</h5>
     </div>
@@ -623,6 +622,13 @@
                 document.getElementsByClassName("jcrop-holder")[0].lastElementChild.id = "jcropImg";
                 document.getElementsByClassName("file-upload-image")[1].style.transform = "rotate( " + rotateRate + "deg )";
                 document.getElementsByClassName("jcrop-holder")[0].firstElementChild.firstElementChild.firstElementChild.style.transform = "rotate( " + rotateRate + "deg )";
+                if (firstCrop == false) {
+
+document.getElementsByClassName("jcrop-holder")[0].className = "jcrop-holder aft";
+document.getElementsByClassName("jcrop-holder")[0].lastElementChild.style.opacity = 1;
+} else {
+firstCrop = false;
+}
             }
         }
         //업로드된 이미지를 jcrop라이브러리로 변환하고 이미지를 캔버스에 그려놓는다.
