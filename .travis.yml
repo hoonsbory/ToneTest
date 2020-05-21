@@ -19,7 +19,6 @@ deploy:
     region: ap-northeast-2
     skip_cleanup: true
     acl: public_read
-    wait-until-deployed: true
     on:
       repo: hoonsbory/ToneTest #Github 주소
       branch: master
