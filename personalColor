@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0" />
 </head>
 
@@ -186,6 +186,7 @@
         };
 
         if (isFacebookApp) {
+            alert("페북입니다")
             document.getElementById("fileInput").removeAttribute("accept");
         }
         //크롭없이 회전후 크롭할 경우  크롭을 하는 것은, 원본이미지를 캔버스에 옮겨오는 것으로 시작하는데, 크롭버튼을 누르지않고 회전부터 할 경우, 나중에 크롭할때 회전도가 달라 문제가 생긴다.
